@@ -34,5 +34,16 @@ void AKBBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis("MoveForward", this, &AKBBaseCharacter::MoveForward);
+    PlayerInputComponent->BindAxis("MoveRight", this, &AKBBaseCharacter::MoveRight);
 }
 
+void AKBBaseCharacter::MoveForward(float Scale)
+{
+    AddMovementInput(GetActorForwardVector(), Scale);
+}
+
+void AKBBaseCharacter::MoveRight(float Scale)
+{
+    AddMovementInput(GetActorRightVector(), Scale);
+}
