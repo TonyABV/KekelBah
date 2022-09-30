@@ -7,6 +7,8 @@
 #include "KBBaseCharacter.generated.h"
 
 class UCameraComponent;
+class USpringArmComponent;
+
 UCLASS()
 class KEKELBAH_API AKBBaseCharacter : public ACharacter
 {
@@ -23,6 +25,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CameraComponent")
     UCameraComponent* CameraComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpringArmComponent")
+    USpringArmComponent* SpringArmComponent;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -31,6 +36,5 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void MoveForward(float Scale);
-
 	void MoveRight(float Scale);
 };
