@@ -5,6 +5,7 @@
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AKBBaseCharacter::AKBBaseCharacter()
@@ -45,6 +46,9 @@ void AKBBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     PlayerInputComponent->BindAxis("LookAround", this, &AKBBaseCharacter::AddControllerYawInput);
 
     PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AKBBaseCharacter::Jump);
+    PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AKBBaseCharacter::BeginSpring);
+    PlayerInputComponent->BindAction("Run", IE_Released, this, &AKBBaseCharacter::CancelSprint);
+    PlayerInputComponent->BindAction("Walk", IE_Pressed, this, &AKBBaseCharacter::Walk);
 }
 
 void AKBBaseCharacter::MoveForward(float Scale)
@@ -55,4 +59,39 @@ void AKBBaseCharacter::MoveForward(float Scale)
 void AKBBaseCharacter::MoveRight(float Scale)
 {
     AddMovementInput(GetActorRightVector(), Scale);
+}
+
+void AKBBaseCharacter::BeginSpring()
+{
+    GetCharacterMovement()->MaxWalkSpeed = 1000.f;
+    GetCharacterMovement()->MaxWalkSpeed = 1000.f;
+    bIsSprinting = true;
+}
+
+void AKBBaseCharacter::CancelSprint() 
+{
+    if (bIsWalking)
+    {
+        GetCharacterMovement()->MaxWalkSpeed = 200.f;
+    }
+    else
+    {
+        GetCharacterMovement()->MaxWalkSpeed = 600.f;
+    }
+    bIsSprinting = false;
+}
+
+void AKBBaseCharacter::Walk() 
+{
+    switch (bIsWalking)
+    {
+        case false: 
+            bIsWalking = true;
+            GetCharacterMovement()->MaxWalkSpeed = 200.f;
+            break;
+        case true:
+            bIsWalking = false;
+            GetCharacterMovement()->MaxWalkSpeed = 600.f;
+            break;
+    }
 }

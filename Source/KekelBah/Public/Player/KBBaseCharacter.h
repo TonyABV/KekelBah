@@ -28,6 +28,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpringArmComponent")
     USpringArmComponent* SpringArmComponent;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsSprinting = false;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsWalking = false;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -37,4 +43,8 @@ public:
 
 	void MoveForward(float Scale);
 	void MoveRight(float Scale);
+
+    void BeginSpring();
+    void CancelSprint();
+    void Walk();
 };
