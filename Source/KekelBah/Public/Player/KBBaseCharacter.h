@@ -16,7 +16,10 @@ class KEKELBAH_API AKBBaseCharacter : public ACharacter
 
 public:
 	// Sets default values for this character's properties
-	AKBBaseCharacter();
+	AKBBaseCharacter(const FObjectInitializer& ObjectInitializer);
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,16 +31,22 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpringArmComponent")
     USpringArmComponent* SpringArmComponent;
 
-	UPROPERTY(BlueprintReadOnly)
-	bool bIsSprinting = false;
+	UPROPERTY()
+	bool bWantSprinting = false;
 
-	UPROPERTY(BlueprintReadOnly)
-	bool bIsWalking = false;
+	UPROPERTY()
+	bool bWantSlowStepping = false;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditDefaultsOnly)
+    float SlowSteppingSpeed = 200.f;
 
+	UPROPERTY(EditDefaultsOnly)
+    float SprintSpeed = 1000.f;
+
+	UPROPERTY(EditDefaultsOnly)
+    float DefaultWalkSpeed = 600.f;
+
+protected:	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -46,5 +55,14 @@ public:
 
     void BeginSpring();
     void CancelSprint();
-    void Walk();
+    void SlowStepSwitcher();
+
+public:
+
+    UFUNCTION(BlueprintCallable)
+    bool IsSlowStepping();
+
+    UFUNCTION(BlueprintCallable)
+    bool IsSprinting();
+
 };

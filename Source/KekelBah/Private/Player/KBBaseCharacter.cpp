@@ -5,10 +5,12 @@
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Player/KBBaseCharacterMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
-AKBBaseCharacter::AKBBaseCharacter()
+AKBBaseCharacter::AKBBaseCharacter(const FObjectInitializer& ObjectInitializer) :
+Super(ObjectInitializer.SetDefaultSubobjectClass<UKBBaseCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -48,7 +50,7 @@ void AKBBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AKBBaseCharacter::Jump);
     PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AKBBaseCharacter::BeginSpring);
     PlayerInputComponent->BindAction("Run", IE_Released, this, &AKBBaseCharacter::CancelSprint);
-    PlayerInputComponent->BindAction("Walk", IE_Pressed, this, &AKBBaseCharacter::Walk);
+    PlayerInputComponent->BindAction("SlowStep", IE_Pressed, this, &AKBBaseCharacter::SlowStepSwitcher);
 }
 
 void AKBBaseCharacter::MoveForward(float Scale)
@@ -63,35 +65,47 @@ void AKBBaseCharacter::MoveRight(float Scale)
 
 void AKBBaseCharacter::BeginSpring()
 {
-    GetCharacterMovement()->MaxWalkSpeed = 1000.f;
-    GetCharacterMovement()->MaxWalkSpeed = 1000.f;
-    bIsSprinting = true;
+    //GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+    bWantSprinting = true;
 }
 
 void AKBBaseCharacter::CancelSprint() 
 {
-    if (bIsWalking)
-    {
-        GetCharacterMovement()->MaxWalkSpeed = 200.f;
+    //if (bWantSlowStepping)
+    /*{
+        GetCharacterMovement()->MaxWalkSpeed = SlowSteppingSpeed;
     }
     else
     {
-        GetCharacterMovement()->MaxWalkSpeed = 600.f;
-    }
-    bIsSprinting = false;
+        GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
+    }*/
+    bWantSprinting = false;
 }
 
-void AKBBaseCharacter::Walk() 
+void AKBBaseCharacter::SlowStepSwitcher() 
 {
-    switch (bIsWalking)
+    switch (bWantSlowStepping)
     {
         case false: 
-            bIsWalking = true;
-            GetCharacterMovement()->MaxWalkSpeed = 200.f;
+            bWantSlowStepping = true;
+            //GetCharacterMovement()->MaxWalkSpeed = SlowSteppingSpeed;
             break;
         case true:
-            bIsWalking = false;
-            GetCharacterMovement()->MaxWalkSpeed = 600.f;
+            bWantSlowStepping = false;
+            //GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
             break;
     }
+    bWantSprinting = false;
+}
+
+bool AKBBaseCharacter::IsSlowStepping()
+{
+    if (IsSprinting()) return false;
+
+    return bWantSlowStepping && !GetVelocity().IsZero();
+}
+
+bool AKBBaseCharacter::IsSprinting()
+{
+    return bWantSprinting && !GetVelocity().IsZero();
 }
