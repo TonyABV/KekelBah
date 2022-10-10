@@ -1,46 +1,45 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "KBBaseCharacter.h"
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Player/KBBaseCharacterMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
-AKBBaseCharacter::AKBBaseCharacter()
+AKBBaseCharacter::AKBBaseCharacter(const FObjectInitializer& ObjectInitializer)
+    : Super(ObjectInitializer.SetDefaultSubobjectClass<UKBBaseCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+    // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+    PrimaryActorTick.bCanEverTick = true;
 
     SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
     SpringArmComponent->SetupAttachment(GetRootComponent());
     SpringArmComponent->bUsePawnControlRotation = true;
 
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
+    CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
 }
 
 // Called when the game starts or when spawned
 void AKBBaseCharacter::BeginPlay()
 {
-	Super::BeginPlay();
-
+    Super::BeginPlay();
 }
 
 // Called every frame
 void AKBBaseCharacter::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-
+    Super::Tick(DeltaTime);
 }
 
 // Called to bind functionality to input
 void AKBBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+    Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &AKBBaseCharacter::MoveForward);
+    PlayerInputComponent->BindAxis("MoveForward", this, &AKBBaseCharacter::MoveForward);
     PlayerInputComponent->BindAxis("MoveRight", this, &AKBBaseCharacter::MoveRight);
     PlayerInputComponent->BindAxis("LookUp", this, &AKBBaseCharacter::AddControllerPitchInput);
     PlayerInputComponent->BindAxis("LookAround", this, &AKBBaseCharacter::AddControllerYawInput);
@@ -48,7 +47,7 @@ void AKBBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AKBBaseCharacter::Jump);
     PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AKBBaseCharacter::BeginSpring);
     PlayerInputComponent->BindAction("Run", IE_Released, this, &AKBBaseCharacter::CancelSprint);
-    PlayerInputComponent->BindAction("Walk", IE_Pressed, this, &AKBBaseCharacter::Walk);
+    PlayerInputComponent->BindAction("SlowStep", IE_Pressed, this, &AKBBaseCharacter::SlowStepSwitcher);
 }
 
 void AKBBaseCharacter::MoveForward(float Scale)
@@ -63,35 +62,32 @@ void AKBBaseCharacter::MoveRight(float Scale)
 
 void AKBBaseCharacter::BeginSpring()
 {
-    GetCharacterMovement()->MaxWalkSpeed = 1000.f;
-    GetCharacterMovement()->MaxWalkSpeed = 1000.f;
-    bIsSprinting = true;
+    bWantSprinting = true;
 }
 
-void AKBBaseCharacter::CancelSprint() 
+void AKBBaseCharacter::CancelSprint()
 {
-    if (bIsWalking)
-    {
-        GetCharacterMovement()->MaxWalkSpeed = 200.f;
-    }
-    else
-    {
-        GetCharacterMovement()->MaxWalkSpeed = 600.f;
-    }
-    bIsSprinting = false;
+    bWantSprinting = false;
 }
 
-void AKBBaseCharacter::Walk() 
+void AKBBaseCharacter::SlowStepSwitcher()
 {
-    switch (bIsWalking)
+    switch (bWantSlowStepping)
     {
-        case false: 
-            bIsWalking = true;
-            GetCharacterMovement()->MaxWalkSpeed = 200.f;
-            break;
-        case true:
-            bIsWalking = false;
-            GetCharacterMovement()->MaxWalkSpeed = 600.f;
-            break;
+        case false: bWantSlowStepping = true; break;
+        case true: bWantSlowStepping = false; break;
     }
+    bWantSprinting = false;
+}
+
+bool AKBBaseCharacter::IsSlowStepping()
+{
+    if (IsSprinting()) return false;
+
+    return bWantSlowStepping && !GetVelocity().IsZero();
+}
+
+bool AKBBaseCharacter::IsSprinting()
+{
+    return bWantSprinting && !GetVelocity().IsZero();
 }
