@@ -17,4 +17,5 @@ class KEKELBAH_API AKekelBahGameModeBase : public AGameModeBase
 public:
 
     AKekelBahGameModeBase();
+    
 };
