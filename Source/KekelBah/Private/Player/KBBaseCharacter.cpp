@@ -91,3 +91,14 @@ bool AKBBaseCharacter::IsSprinting()
 {
     return bWantSprinting && !GetVelocity().IsZero();
 }
+
+float AKBBaseCharacter::GetMovementDirection()
+{
+    FVector ForwardVector = GetActorForwardVector();
+    FVector VelocityDirection = GetVelocity().GetSafeNormal();
+
+    float AngleBetweene =  FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(ForwardVector, VelocityDirection)));
+    float Sign = FMath::Sign(FVector::CrossProduct(ForwardVector, VelocityDirection).Z);
+
+    return AngleBetweene * Sign;
+}

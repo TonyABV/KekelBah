@@ -58,9 +58,12 @@ protected:
     void SlowStepSwitcher();
 
 public:
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Movement")
     bool IsSlowStepping();
 
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Movement")
     bool IsSprinting();
+
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    float GetMovementDirection();
 };
