@@ -72,10 +72,13 @@ void AKBBaseCharacter::CancelSprint()
 
 void AKBBaseCharacter::SlowStepSwitcher()
 {
-    switch (bWantSlowStepping)
+    if (bWantSlowStepping)
     {
-        case false: bWantSlowStepping = true; break;
-        case true: bWantSlowStepping = false; break;
+        bWantSlowStepping = false;
+    }
+    else
+    {
+        bWantSlowStepping = true;
     }
     bWantSprinting = false;
 }
