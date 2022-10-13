@@ -33,15 +33,15 @@ AKBBaseCharacter::AKBBaseCharacter(const FObjectInitializer& ObjectInitializer)
 void AKBBaseCharacter::BeginPlay()
 {
     Super::BeginPlay();
-
-    check(HealthComponent);
-    check(TextRenderComponent);
+    
 }
 
 // Called every frame
 void AKBBaseCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+
+    TakeDamage(1.f, FDamageEvent{}, Controller, this);
 
     const float Health = HealthComponent->GetCurrentHealth();
 

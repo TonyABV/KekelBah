@@ -16,4 +16,15 @@ void UKBHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	Health = MaxHealth;
+
+	if (IsValid(GetOwner()))
+	{
+        GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UKBHealthComponent::OnTakeDamageHandle);
+	}
+}
+
+void UKBHealthComponent::OnTakeDamageHandle(
+    AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+    Health -= Damage;
 }
