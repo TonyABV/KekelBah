@@ -8,6 +8,8 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class UKBHealthComponent;
+class UTextRenderComponent;
 
 UCLASS()
 class KEKELBAH_API AKBBaseCharacter : public ACharacter
@@ -30,6 +32,12 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpringArmComponent")
     USpringArmComponent* SpringArmComponent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HealthComponent")
+    UKBHealthComponent* HealthComponent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TextComponent")
+    UTextRenderComponent* TextRenderComponent;
 
     UPROPERTY()
     bool bWantSprinting = false;

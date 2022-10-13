@@ -6,6 +6,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Player/KBBaseCharacterMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/Components/KBHealthComponent.h"
+#include "Components/TextRenderComponent.h"
 
 // Sets default values
 AKBBaseCharacter::AKBBaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -20,18 +22,30 @@ AKBBaseCharacter::AKBBaseCharacter(const FObjectInitializer& ObjectInitializer)
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
+
+    HealthComponent = CreateDefaultSubobject<UKBHealthComponent>("HealthComponent");
+
+    TextRenderComponent = CreateDefaultSubobject<UTextRenderComponent>("TextRenderComponent");
+    TextRenderComponent->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
 void AKBBaseCharacter::BeginPlay()
 {
     Super::BeginPlay();
+
+    check(HealthComponent);
+    check(TextRenderComponent);
 }
 
 // Called every frame
 void AKBBaseCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+
+    const float Health = HealthComponent->GetCurrentHealth();
+
+    TextRenderComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 
 // Called to bind functionality to input
