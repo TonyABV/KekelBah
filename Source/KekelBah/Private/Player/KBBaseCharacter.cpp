@@ -40,9 +40,7 @@ void AKBBaseCharacter::BeginPlay()
 void AKBBaseCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-
-    TakeDamage(1.f, FDamageEvent{}, Controller, this);
-
+    
     const float Health = HealthComponent->GetCurrentHealth();
 
     TextRenderComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));

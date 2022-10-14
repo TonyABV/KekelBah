@@ -3,6 +3,7 @@
 
 #include "Player/Components/KBHealthComponent.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All);
 
 UKBHealthComponent::UKBHealthComponent()
 {
@@ -27,4 +28,6 @@ void UKBHealthComponent::OnTakeDamageHandle(
     AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
     Health -= Damage;
+
+	UE_LOG(LogHealthComponent, Log, TEXT("Actor: %s, Damege: %f"), *(GetOwner()->GetName()), Damage);
 }
