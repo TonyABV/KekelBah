@@ -54,6 +54,9 @@ protected:
     UPROPERTY(EditDefaultsOnly)
     float DefaultWalkSpeed = 600.f;
 
+    UPROPERTY(EditDefaultsOnly, Category = "Animation")
+    UAnimMontage* DeathAnim;
+
 protected:
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -64,7 +67,12 @@ protected:
     void BeginSpring();
     void CancelSprint();
     void SlowStepSwitcher();
-    
+
+    void OnDeath();
+
+    //UFUNCTION()
+    void OnHealthChanged(float NewHealth);
+
 public:
     UFUNCTION(BlueprintCallable, Category = "Movement")
     bool IsSlowStepping();

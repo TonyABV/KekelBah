@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/Components/KBHealthComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "GameFramework/Controller.h"
 
 // Sets default values
 AKBBaseCharacter::AKBBaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -33,17 +34,17 @@ AKBBaseCharacter::AKBBaseCharacter(const FObjectInitializer& ObjectInitializer)
 void AKBBaseCharacter::BeginPlay()
 {
     Super::BeginPlay();
-    
+
+    HealthComponent->OnDead.AddUObject(this, &AKBBaseCharacter::OnDeath);
+
+    HealthComponent->OnHealthChanged.AddUObject(this, &AKBBaseCharacter::OnHealthChanged);
+    OnHealthChanged(HealthComponent->GetCurrentHealth());
 }
 
 // Called every frame
 void AKBBaseCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-    
-    const float Health = HealthComponent->GetCurrentHealth();
-
-    TextRenderComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 
 // Called to bind functionality to input
@@ -93,6 +94,25 @@ void AKBBaseCharacter::SlowStepSwitcher()
         bWantSlowStepping = true;
     }
     bWantSprinting = false;
+}
+
+void AKBBaseCharacter::OnDeath()
+{
+    PlayAnimMontage(DeathAnim);
+    GetCharacterMovement()->DisableMovement();
+    SetLifeSpan(5.f);
+
+    if (IsValid(Controller))
+    {
+        Controller->ChangeState(NAME_Spectating);
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("%s death"), *GetName());
+}
+
+void AKBBaseCharacter::OnHealthChanged(float NewHealth)
+{
+    TextRenderComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), NewHealth)));
 }
 
 bool AKBBaseCharacter::IsSlowStepping()

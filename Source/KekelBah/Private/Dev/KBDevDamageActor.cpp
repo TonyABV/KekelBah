@@ -27,7 +27,7 @@ void AKBDevDamageActor::BeginPlay()
         [=]()
         {
             UGameplayStatics::ApplyRadialDamage(
-                GetWorld(), Damage, GetActorLocation(), SphereRadius, {}, {}, this, GetInstigatorController(), true);
+                GetWorld(), Damage, GetActorLocation(), SphereRadius, DamageType, {}, this, GetInstigatorController(), true);
         },
         DamageSpan, true, DamageSpan);
 }

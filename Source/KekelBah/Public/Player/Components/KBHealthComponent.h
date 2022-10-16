@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "KBHealthComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnDeath);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, const float);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class KEKELBAH_API UKBHealthComponent : public UActorComponent
@@ -22,6 +24,13 @@ public:
 	UFUNCTION(BlueprintCallable)
     float GetCurrentHealth() const { return Health; }
 
+	UFUNCTION(BlueprintCallable)
+    bool IsDeath();
+
+    FOnDeath OnDead;
+
+	FOnHealthChanged OnHealthChanged;
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -31,4 +40,5 @@ protected:
 	UFUNCTION()
     void OnTakeDamageHandle(
         AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
 };

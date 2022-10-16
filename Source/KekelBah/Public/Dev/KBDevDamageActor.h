@@ -21,6 +21,9 @@ public:
     float SphereRadius = 0.f;
 
 	UPROPERTY(EditAnywhere)
+    TSubclassOf<UDamageType> DamageType;
+
+	UPROPERTY(EditAnywhere)
     FColor Color = FColor::Cyan;
 
 	UPROPERTY(EditAnywhere)
