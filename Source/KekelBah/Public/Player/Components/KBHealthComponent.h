@@ -7,6 +7,11 @@
 #include "KBHealthComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnDeath);
+
+DECLARE_MULTICAST_DELEGATE(FOnDamaged);
+
+DECLARE_MULTICAST_DELEGATE(FOnFullHealth);
+
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, const float);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -31,6 +36,25 @@ public:
 
 	FOnHealthChanged OnHealthChanged;
 
+    FOnDamaged OnDamaged;
+
+    FOnFullHealth OnFullHealth;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AutoHeal")
+    bool bAutoHealEnable = false;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AutoHeal", meta = (EditCondition = "bAutoHealEnable"))
+    float AutoHealDelay = 0.5f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AutoHeal", meta = (EditCondition = "bAutoHealEnable"))
+    float AutoHealSpan = 0.2f;
+
+    UPROPERTY(EditDefaultsOnly, Category = "AutoHeal", meta = (EditCondition = "bAutoHealEnable"))
+    float AutoHealValue = 1.f;
+
+	UFUNCTION()
+    void TryOnAutoHeal();
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -41,4 +65,11 @@ protected:
     void OnTakeDamageHandle(
         AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
+	FTimerHandle AutoHealHandle;
+	
+	UFUNCTION()
+    void Heal(const float Value);
+
+	UFUNCTION()
+    void StopAutoHeal();
 };

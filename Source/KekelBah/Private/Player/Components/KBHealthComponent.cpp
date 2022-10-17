@@ -28,6 +28,13 @@ void UKBHealthComponent::BeginPlay()
 	{
         GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UKBHealthComponent::OnTakeDamageHandle);
 	}
+
+	if (bAutoHealEnable)
+	{
+        OnDamaged.AddUObject(this, &UKBHealthComponent::TryOnAutoHeal);
+        OnDead.AddUObject(this, &UKBHealthComponent::StopAutoHeal);
+        OnFullHealth.AddUObject(this, &UKBHealthComponent::StopAutoHeal);
+	}	
 }
 
 void UKBHealthComponent::OnTakeDamageHandle(
@@ -37,9 +44,11 @@ void UKBHealthComponent::OnTakeDamageHandle(
 	
     Health = FMath::Clamp( Health - Damage, 0.f, MaxHealth);
 
+    OnDamaged.Broadcast();
+
 	OnHealthChanged.Broadcast(Health);
 
-	if (Health == 0.f) OnDead.Broadcast();
+	if (FMath::IsNearlyZero(Health)) OnDead.Broadcast();
 
 	if (IsValid(DamageType))
 	{
@@ -50,4 +59,37 @@ void UKBHealthComponent::OnTakeDamageHandle(
 	}
 
 	UE_LOG(LogHealthComponent, Log, TEXT("Actor: %s, Damege: %f"), *(GetOwner()->GetName()), Damage);
+}
+
+void UKBHealthComponent::TryOnAutoHeal()
+{
+    if (!IsValid(GetWorld())) return;
+
+    auto& TimerManager = GetWorld()->GetTimerManager();
+
+    TimerManager.ClearTimer(AutoHealHandle);
+
+    TimerManager.SetTimer(
+        AutoHealHandle, [=]() { Heal(AutoHealValue); }, AutoHealSpan, true, AutoHealDelay);
+
+}
+
+void UKBHealthComponent::Heal(const float Value)
+{
+    if (MaxHealth != Health)
+    {
+        Health = FMath::Clamp(Health += Value, 0.f, MaxHealth);
+    }
+
+    OnHealthChanged.Broadcast(Health);
+
+    if (FMath::IsNearlyEqual(Health, MaxHealth))
+    {
+        OnFullHealth.Broadcast();
+    }
+}
+
+void UKBHealthComponent::StopAutoHeal()
+{
+    GetWorld()->GetTimerManager().ClearTimer(AutoHealHandle);
 }
