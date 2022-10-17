@@ -57,7 +57,17 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Animation")
     UAnimMontage* DeathAnim;
 
+    UPROPERTY(EditDefaultsOnly, Category = "Damage")
+    FVector2D LandDamageRange = FVector2D{20.f, 100.f};
+
+    UPROPERTY(EditDefaultsOnly, Category = "Damage")
+    FVector2D LandVelocityRangeForDamage = FVector2D{500.f, 1000.f};
+
 protected:
+
+    UFUNCTION()
+    void OnGroundLanded(const FHitResult& Hit);
+
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -69,8 +79,7 @@ protected:
     void SlowStepSwitcher();
 
     void OnDeath();
-
-    //UFUNCTION()
+    
     void OnHealthChanged(float NewHealth);
 
 public:

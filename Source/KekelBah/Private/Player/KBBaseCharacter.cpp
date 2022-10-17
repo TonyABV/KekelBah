@@ -10,6 +10,8 @@
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/Controller.h"
 
+DEFINE_LOG_CATEGORY_STATIC(BaseChar, All, All);
+
 // Sets default values
 AKBBaseCharacter::AKBBaseCharacter(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer.SetDefaultSubobjectClass<UKBBaseCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -39,12 +41,29 @@ void AKBBaseCharacter::BeginPlay()
 
     HealthComponent->OnHealthChanged.AddUObject(this, &AKBBaseCharacter::OnHealthChanged);
     OnHealthChanged(HealthComponent->GetCurrentHealth());
+
+    LandedDelegate.AddDynamic(this, &AKBBaseCharacter::OnGroundLanded);
 }
 
 // Called every frame
 void AKBBaseCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+}
+
+void AKBBaseCharacter::OnGroundLanded(const FHitResult& Hit)
+{
+    float LandVelocity = -GetVelocity().Z;
+
+    UE_LOG(BaseChar, Display, TEXT("LandVelocity = %f"), LandVelocity);
+
+    if (LandVelocity < LandVelocityRangeForDamage.X) return;
+
+    float Damage = FMath::GetMappedRangeValueClamped(LandVelocityRangeForDamage, LandDamageRange, LandVelocity);
+
+    TakeDamage(Damage, {}, nullptr, nullptr);
+
+    UE_LOG(BaseChar, Display, TEXT("LandDamage = %f"), Damage);
 }
 
 // Called to bind functionality to input
