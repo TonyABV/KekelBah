@@ -12,7 +12,12 @@ public class KekelBah : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 		
-		PublicIncludePaths.AddRange(new string[] {"KekelBah/Public/Player", "KekelBah/Public/Dev"});
+		PublicIncludePaths.AddRange(new string[] 
+        {
+            "KekelBah/Public/Player", 
+            "KekelBah/Public/Dev",
+			"KekelBah/Public/Weapon"
+        });
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 		

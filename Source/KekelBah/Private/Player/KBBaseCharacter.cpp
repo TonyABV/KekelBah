@@ -9,6 +9,7 @@
 #include "Player/Components/KBHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/Controller.h"
+#include "KBWeaponBaseActor.h"
 
 DEFINE_LOG_CATEGORY_STATIC(BaseChar, All, All);
 
@@ -30,6 +31,7 @@ AKBBaseCharacter::AKBBaseCharacter(const FObjectInitializer& ObjectInitializer)
 
     TextRenderComponent = CreateDefaultSubobject<UTextRenderComponent>("TextRenderComponent");
     TextRenderComponent->SetupAttachment(GetRootComponent());
+
 }
 
 // Called when the game starts or when spawned
@@ -43,6 +45,8 @@ void AKBBaseCharacter::BeginPlay()
     OnHealthChanged(HealthComponent->GetCurrentHealth());
 
     LandedDelegate.AddDynamic(this, &AKBBaseCharacter::OnGroundLanded);
+
+    SpawnWeapon();
 }
 
 // Called every frame
@@ -139,6 +143,19 @@ bool AKBBaseCharacter::IsSlowStepping()
     if (IsSprinting()) return false;
 
     return bWantSlowStepping && !GetVelocity().IsZero();
+}
+
+void AKBBaseCharacter::SpawnWeapon()
+{
+    if (!IsValid(GetWorld())) return;
+
+    AKBWeaponBaseActor* Weapon = GetWorld()->SpawnActor<AKBWeaponBaseActor>(WeaponClass);
+
+    if (IsValid(Weapon))
+    {
+        FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
+        Weapon->AttachToComponent(GetMesh(), AttachmentRules, "WeaponPoint");
+    }
 }
 
 bool AKBBaseCharacter::IsSprinting()

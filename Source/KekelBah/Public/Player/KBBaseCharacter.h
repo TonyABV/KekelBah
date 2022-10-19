@@ -10,6 +10,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UKBHealthComponent;
 class UTextRenderComponent;
+class AKBWeaponBaseActor;
 
 UCLASS()
 class KEKELBAH_API AKBBaseCharacter : public ACharacter
@@ -19,12 +20,10 @@ class KEKELBAH_API AKBBaseCharacter : public ACharacter
 public:
     // Sets default values for this character's properties
     AKBBaseCharacter(const FObjectInitializer& ObjectInitializer);
-
-    // Called every frame
+    
     virtual void Tick(float DeltaTime) override;
 
 protected:
-    // Called when the game starts or when spawned
     virtual void BeginPlay() override;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CameraComponent")
@@ -38,6 +37,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TextComponent")
     UTextRenderComponent* TextRenderComponent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+    TSubclassOf<AKBWeaponBaseActor> WeaponClass;
 
     UPROPERTY()
     bool bWantSprinting = false;
@@ -81,6 +83,8 @@ protected:
     void OnDeath();
     
     void OnHealthChanged(float NewHealth);
+
+    void SpawnWeapon();
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Movement")
