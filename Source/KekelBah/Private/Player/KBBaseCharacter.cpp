@@ -9,7 +9,8 @@
 #include "Player/Components/KBHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/Controller.h"
-#include "KBWeaponBaseActor.h"
+#include "KBBaseWeaponActor.h"
+#include "KBWeaponComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(BaseChar, All, All);
 
@@ -23,15 +24,18 @@ AKBBaseCharacter::AKBBaseCharacter(const FObjectInitializer& ObjectInitializer)
     SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
     SpringArmComponent->SetupAttachment(GetRootComponent());
     SpringArmComponent->bUsePawnControlRotation = true;
+    SpringArmComponent->SocketOffset = FVector(0.f, 100.f, 80.f);
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
-
+    
     HealthComponent = CreateDefaultSubobject<UKBHealthComponent>("HealthComponent");
 
     TextRenderComponent = CreateDefaultSubobject<UTextRenderComponent>("TextRenderComponent");
     TextRenderComponent->SetupAttachment(GetRootComponent());
+    TextRenderComponent->SetOwnerNoSee(false);
 
+    WeaponComponent = CreateDefaultSubobject<UKBWeaponComponent>("WeaponComponent");
 }
 
 // Called when the game starts or when spawned
@@ -46,7 +50,6 @@ void AKBBaseCharacter::BeginPlay()
 
     LandedDelegate.AddDynamic(this, &AKBBaseCharacter::OnGroundLanded);
 
-    SpawnWeapon();
 }
 
 // Called every frame
@@ -84,6 +87,7 @@ void AKBBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AKBBaseCharacter::BeginSpring);
     PlayerInputComponent->BindAction("Run", IE_Released, this, &AKBBaseCharacter::CancelSprint);
     PlayerInputComponent->BindAction("SlowStep", IE_Pressed, this, &AKBBaseCharacter::SlowStepSwitcher);
+    PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UKBWeaponComponent::Fire);
 }
 
 void AKBBaseCharacter::MoveForward(float Scale)
@@ -143,19 +147,6 @@ bool AKBBaseCharacter::IsSlowStepping()
     if (IsSprinting()) return false;
 
     return bWantSlowStepping && !GetVelocity().IsZero();
-}
-
-void AKBBaseCharacter::SpawnWeapon()
-{
-    if (!IsValid(GetWorld())) return;
-
-    AKBWeaponBaseActor* Weapon = GetWorld()->SpawnActor<AKBWeaponBaseActor>(WeaponClass);
-
-    if (IsValid(Weapon))
-    {
-        FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
-        Weapon->AttachToComponent(GetMesh(), AttachmentRules, "WeaponPoint");
-    }
 }
 
 bool AKBBaseCharacter::IsSprinting()

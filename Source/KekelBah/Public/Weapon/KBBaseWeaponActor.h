@@ -4,18 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "KBWeaponBaseActor.generated.h"
+#include "KBBaseWeaponActor.generated.h"
 
 class USkeletalMeshComponent;
 
 UCLASS()
-class KEKELBAH_API AKBWeaponBaseActor : public AActor
+class KEKELBAH_API AKBBaseWeaponActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AKBWeaponBaseActor();
+	AKBBaseWeaponActor();
+
+	virtual void Fire();
 
 protected:
 	// Called when the game starts or when spawned

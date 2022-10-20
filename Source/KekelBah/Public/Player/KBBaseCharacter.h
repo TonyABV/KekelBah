@@ -10,7 +10,8 @@ class UCameraComponent;
 class USpringArmComponent;
 class UKBHealthComponent;
 class UTextRenderComponent;
-class AKBWeaponBaseActor;
+class AKBBaseWeaponActor;
+class UKBWeaponComponent;
 
 UCLASS()
 class KEKELBAH_API AKBBaseCharacter : public ACharacter
@@ -18,7 +19,7 @@ class KEKELBAH_API AKBBaseCharacter : public ACharacter
     GENERATED_BODY()
 
 public:
-    // Sets default values for this character's properties
+
     AKBBaseCharacter(const FObjectInitializer& ObjectInitializer);
     
     virtual void Tick(float DeltaTime) override;
@@ -38,8 +39,8 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TextComponent")
     UTextRenderComponent* TextRenderComponent;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-    TSubclassOf<AKBWeaponBaseActor> WeaponClass;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
+    UKBWeaponComponent* WeaponComponent;
 
     UPROPERTY()
     bool bWantSprinting = false;
@@ -83,9 +84,7 @@ protected:
     void OnDeath();
     
     void OnHealthChanged(float NewHealth);
-
-    void SpawnWeapon();
-
+    
 public:
     UFUNCTION(BlueprintCallable, Category = "Movement")
     bool IsSlowStepping();
