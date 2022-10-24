@@ -14,17 +14,31 @@ class KEKELBAH_API AKBBaseWeaponActor : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+
 	AKBBaseWeaponActor();
 
 	virtual void Fire();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* WeaponMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Fire")
+    FName MuzzleSocketName = "MuzzleSocket";
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Fire")
+    float TraceDistance = 1500.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Fire")
+    float Damage = 10.f;
+
+protected:
+
+	virtual void BeginPlay() override;
+
+	void MakeShot();
 
 public:	
 

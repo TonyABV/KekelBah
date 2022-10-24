@@ -11,6 +11,7 @@
 #include "GameFramework/Controller.h"
 #include "KBBaseWeaponActor.h"
 #include "KBWeaponComponent.h"
+#include "Components/CapsuleComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(BaseChar, All, All);
 
@@ -133,6 +134,8 @@ void AKBBaseCharacter::OnDeath()
     {
         Controller->ChangeState(NAME_Spectating);
     }
+
+    GetCapsuleComponent()->SetCollisionResponseToChannels(ECollisionResponse::ECR_Ignore);
 
     UE_LOG(LogTemp, Log, TEXT("%s death"), *GetName());
 }

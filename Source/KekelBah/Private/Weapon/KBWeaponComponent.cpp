@@ -23,7 +23,9 @@ void UKBWeaponComponent::SpawnWeapon()
 {
     if (!IsValid(GetWorld())) return;
 
-    CurrentWeapon = GetWorld()->SpawnActor<AKBBaseWeaponActor>(WeaponClass);
+    FActorSpawnParameters SpawnParameters;
+    SpawnParameters.Owner = GetOwner();
+    CurrentWeapon = GetWorld()->SpawnActor<AKBBaseWeaponActor>(WeaponClass, SpawnParameters);
 
     if (!IsValid(CurrentWeapon)) return;
 
