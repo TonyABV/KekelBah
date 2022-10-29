@@ -26,39 +26,34 @@ void AKBBaseWeaponActor::BeginPlay()
 	check(WeaponMesh);
 }
 
-void AKBBaseWeaponActor::Fire()
+void AKBBaseWeaponActor::StartFire()
 {
-    UE_LOG(BaseWeapon, Display, TEXT("Fire!"));
+    UE_LOG(BaseWeapon, Display, TEXT("StartFire!"));
 
-	MakeShot();
+    GetWorld()->GetTimerManager().SetTimer(FireHandle, this, &AKBBaseWeaponActor::MakeShot, TimeBetweenShots, true);
+}
+
+void AKBBaseWeaponActor::EndFire()
+{
+    UE_LOG(BaseWeapon, Display, TEXT("EndFire!"));
+    GetWorld()->GetTimerManager().ClearTimer(FireHandle);
 }
 
 
 void AKBBaseWeaponActor::MakeShot()
 {
-    if (!GetWorld()) return;
+    if (!GetOwnersController()) EndFire();
 
-	ACharacter* Player = GetOwner<ACharacter>();
-    if (!IsValid(Player)) return;
-
-	AController* OwnersController = Player->GetController();
-    if (!IsValid(OwnersController)) return;
-
-	FVector ViewLocation;
-    FRotator ViewRotation;
-	OwnersController->GetPlayerViewPoint(ViewLocation, ViewRotation);
-
-	FTransform MuzzleTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
-
-    FVector StartPoint = ViewLocation;               //MuzzleTransform.GetLocation();
-    FVector ShootDirection = ViewRotation.Vector();  // MuzzleTransform.GetRotation().GetForwardVector();
-    FVector EndPoint = ViewLocation + ShootDirection * TraceDistance;
-
+    FVector StartPoint;
+    FVector EndPoint;
+    GetStartEndPoints(StartPoint, EndPoint);
 
 	FHitResult HitResult;
     FCollisionQueryParams TraceParams;
     TraceParams.AddIgnoredActor(GetOwner());
     GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_Visibility, TraceParams);
+
+	FTransform MuzzleTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
 
 	if (HitResult.bBlockingHit)
 	{
@@ -67,13 +62,39 @@ void AKBBaseWeaponActor::MakeShot()
         
         if (!IsValid(HitResult.GetActor())) return;
 
-        HitResult.GetActor()->TakeDamage(Damage, {}, OwnersController, this);
-       //UE_LOG(BaseWeapon, Display, TEXT("Hited bone : %s"), *HitResult.BoneName.ToString());
+        HitResult.GetActor()->TakeDamage(Damage, {}, GetOwnersController(), this);
 	}
     else
     {
         DrawDebugLine(GetWorld(), MuzzleTransform.GetLocation(), EndPoint, FColor::Orange, false, 1.f);
     }
 
+}
+
+AController* AKBBaseWeaponActor::GetOwnersController()
+{
+    if (!GetWorld()) return nullptr;
+
+    ACharacter* Player = GetOwner<ACharacter>();
+    if (!IsValid(Player)) return nullptr;
+
+    return Player->GetController();
+}
+
+void AKBBaseWeaponActor::GetStartEndPoints(FVector& StartPoint, FVector& EndPoint)
+{
+    FVector ViewLocation;
+    FRotator ViewRotation;
+    AController* PC = GetOwnersController();
+    if (PC)
+    {
+        PC->GetPlayerViewPoint(ViewLocation, ViewRotation);
+    }
+
+    StartPoint = ViewLocation;
+    FVector ShootDirection = ViewRotation.Vector();
+
+    const float HalfAngleRad = FMath::DegreesToRadians(FireSpreadAngle / 2);
+    EndPoint = ViewLocation + FMath::VRandCone(ShootDirection, HalfAngleRad)*TraceDistance;
 }
 

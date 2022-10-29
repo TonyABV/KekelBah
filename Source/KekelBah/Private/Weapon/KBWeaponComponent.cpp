@@ -38,8 +38,14 @@ void UKBWeaponComponent::SpawnWeapon()
 
 }
 
-void UKBWeaponComponent::Fire()
+void UKBWeaponComponent::StartFire()
 {
     if (!IsValid(CurrentWeapon)) return;
-    CurrentWeapon->Fire();
+    CurrentWeapon->StartFire();
+}
+
+void UKBWeaponComponent::EndFire()
+{
+    if (!IsValid(CurrentWeapon)) return;
+    CurrentWeapon->EndFire();
 }

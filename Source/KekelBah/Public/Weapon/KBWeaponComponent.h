@@ -16,7 +16,9 @@ class KEKELBAH_API UKBWeaponComponent : public UActorComponent
 public:	
 	UKBWeaponComponent();
 
-    void Fire();
+    void StartFire();
+    void EndFire();
+
 protected:
 
 	virtual void BeginPlay() override;

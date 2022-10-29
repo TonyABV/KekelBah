@@ -17,7 +17,8 @@ public:
 
 	AKBBaseWeaponActor();
 
-	virtual void Fire();
+	virtual void StartFire();
+    virtual void EndFire();
 
 protected:
 
@@ -34,11 +35,23 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Fire")
     float Damage = 10.f;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Fire")
+    float TimeBetweenShots = 0.2f;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Fire")
+    float FireSpreadAngle = 3.f;
+
+	FTimerHandle FireHandle;
+
 protected:
 
 	virtual void BeginPlay() override;
 
 	void MakeShot();
+
+	void GetStartEndPoints(FVector& StartPoint, FVector& EndPoint);
+
+    AController* GetOwnersController();
 
 public:	
 
