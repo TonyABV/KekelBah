@@ -41,10 +41,13 @@ protected:
 
 	virtual  void MakeShot();
 
-    virtual  void GetStartEndPoints(FVector& StartPoint, FVector& EndPoint);
+    virtual void GetStartEndPoints(FVector& StartPoint, FVector& EndPoint);
 
-    AController* GetOwnersController();
+    AController* GetOwnersController() const;
 
-public:	
 
+public:
+    bool GetViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
+
+    bool GetTraceData(FVector& Start, FVector& End) const;
 };

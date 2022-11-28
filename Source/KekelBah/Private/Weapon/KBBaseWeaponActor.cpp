@@ -37,7 +37,7 @@ void AKBBaseWeaponActor::MakeShot()
 {
 }
 
-AController* AKBBaseWeaponActor::GetOwnersController()
+AController* AKBBaseWeaponActor::GetOwnersController() const
 {
     if (!GetWorld()) return nullptr;
 
@@ -45,6 +45,24 @@ AController* AKBBaseWeaponActor::GetOwnersController()
     if (!IsValid(Player)) return nullptr;
 
     return Player->GetController();
+}
+
+bool AKBBaseWeaponActor::GetViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
+{
+    AController* PC = GetOwnersController();
+    if (!IsValid(PC)) return false;
+    PC->GetPlayerViewPoint(ViewLocation, ViewRotation);
+    return true;
+}
+
+bool AKBBaseWeaponActor::GetTraceData(FVector& Start, FVector& End) const
+{
+    FVector ViewLocation;
+    FRotator ViewRotation;
+    if(!GetViewPoint(ViewLocation, ViewRotation)) return false;
+    Start = ViewLocation;
+    End = Start + ViewRotation.Vector() * TraceDistance;
+    return true;
 }
 
 void AKBBaseWeaponActor::GetStartEndPoints(FVector& StartPoint, FVector& EndPoint)
