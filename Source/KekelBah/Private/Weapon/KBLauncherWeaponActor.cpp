@@ -32,5 +32,6 @@ void AKBLauncherWeaponActor::MakeShot()
     {
         Projectile->SetShotDirection(Direction);
         Projectile->FinishSpawning(SpawnTransform);
+        Projectile->SetOwner(GetOwner());
     }
 }

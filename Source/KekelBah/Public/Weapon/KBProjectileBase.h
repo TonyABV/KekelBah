@@ -14,10 +14,7 @@ UCLASS()
 class KEKELBAH_API AKBProjectileBase : public AActor
 {
 	GENERATED_BODY()
-
-private:
-    FVector ShotDirection;
-
+		
 public:	
 	AKBProjectileBase();
 
@@ -27,11 +24,28 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
     UProjectileMovementComponent* MovementComponent;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    float DamageRadius = 200.f;
+
+    UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	float DamageAmount = 50.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+    bool bFullDamage = true;
+
+public:
     void SetShotDirection(const FVector& Direction) { ShotDirection = Direction; }
 
 protected:
 	virtual void BeginPlay() override;
 
-public:	
+	UFUNCTION()
+	void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent*
+        OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	AController* GetOwnersController();
+
+private:
+    FVector ShotDirection;
 
 };
