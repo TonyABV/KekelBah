@@ -90,6 +90,7 @@ void AKBBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     PlayerInputComponent->BindAction("SlowStep", IE_Pressed, this, &AKBBaseCharacter::SlowStepSwitcher);
     PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UKBWeaponComponent::StartFire);
     PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &UKBWeaponComponent::EndFire);
+    PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, WeaponComponent, &UKBWeaponComponent::NextWeapon);
 }
 
 void AKBBaseCharacter::MoveForward(float Scale)
@@ -137,6 +138,8 @@ void AKBBaseCharacter::OnDeath()
     }
 
     GetCapsuleComponent()->SetCollisionResponseToChannels(ECollisionResponse::ECR_Ignore);
+
+    WeaponComponent->EndFire();
 
     UE_LOG(LogTemp, Log, TEXT("%s death"), *GetName());
 }

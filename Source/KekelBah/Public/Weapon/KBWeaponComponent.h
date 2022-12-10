@@ -19,24 +19,39 @@ public:
     void StartFire();
     void EndFire();
 
+    void NextWeapon();
+
 protected:
 
 	virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-    void SpawnWeapon();
+    void SpawnWeapons();
 
+    void AttachWeaponToMesh(AKBBaseWeaponActor* Weapon, USkeletalMeshComponent* SkeletalMesh, const FName& SocketName);
+
+    void EquipWeapon(int32 WeaponIndex);
 
 protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-    TSubclassOf<AKBBaseWeaponActor> WeaponClass;
+    TArray<TSubclassOf<AKBBaseWeaponActor>> WeaponClasses;
 
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-    FName WeaponAttachPointName = "WeaponPoint";
+    FName WeaponEquipPointName = "WeaponPoint";
+
+    UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+    FName WeaponArmoryPointName = "ArmorySocket";
 
     UPROPERTY()
     AKBBaseWeaponActor* CurrentWeapon = nullptr;
 
+    UPROPERTY()
+    TArray<AKBBaseWeaponActor*> Weapons;
+
+    int32 CurrentWeaponIndex = 0.f;
+
 public:	
-	
+
+
 };
