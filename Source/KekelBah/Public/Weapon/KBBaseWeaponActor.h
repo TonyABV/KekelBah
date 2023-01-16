@@ -6,7 +6,25 @@
 #include "GameFramework/Actor.h"
 #include "KBBaseWeaponActor.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnClipEmpty);
+
 class USkeletalMeshComponent;
+
+USTRUCT(BlueprintType)
+struct FWeaponAmmo
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    int32 Bullets;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon", meta = (EditCondition = "!bInfinityAmmo"))
+    int32 Clips;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    bool bInfinityAmmo;
+    
+};
 
 UCLASS()
 class KEKELBAH_API AKBBaseWeaponActor : public AActor
@@ -20,8 +38,17 @@ public:
 	virtual void StartFire();
     virtual void EndFire();
 
-protected:
+    bool GetViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
 
+    bool GetTraceData(FVector& Start, FVector& End) const;
+
+    void ChangeClip();
+
+    bool CanChangeClip() const;
+
+    FOnClipEmpty OnClipEmpty;
+
+protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* WeaponMesh;
@@ -35,6 +62,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Fire")
     float Damage = 10.f;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
+    FWeaponAmmo DefaultAmmo{10, 5, false};
+
+private:
+
+    FWeaponAmmo CurrentAmmo;
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -45,9 +79,11 @@ protected:
 
     AController* GetOwnersController() const;
 
+    void DecreaseAmmo();
 
-public:
-    bool GetViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
+    bool IsAmmoEmpty() const;
 
-    bool GetTraceData(FVector& Start, FVector& End) const;
+    bool IsClipEmpty() const;
+
+    void LogAmmo() const;
 };

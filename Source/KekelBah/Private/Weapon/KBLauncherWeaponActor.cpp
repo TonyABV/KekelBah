@@ -12,6 +12,12 @@ void AKBLauncherWeaponActor::StartFire()
 
 void AKBLauncherWeaponActor::MakeShot()
 {
+    if (IsAmmoEmpty())
+    {
+        EndFire();
+        return;
+    }
+
     if (!GetWorld()) return;
 
     FVector TraceStart, TraceEnd;
@@ -34,4 +40,6 @@ void AKBLauncherWeaponActor::MakeShot()
         Projectile->FinishSpawning(SpawnTransform);
         Projectile->SetOwner(GetOwner());
     }
+
+    DecreaseAmmo();
 }

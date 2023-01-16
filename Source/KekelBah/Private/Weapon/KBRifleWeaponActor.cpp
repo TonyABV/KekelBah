@@ -17,7 +17,14 @@ void AKBRifleWeaponActor::EndFire()
 
 void AKBRifleWeaponActor::MakeShot()
 {
+    if (IsAmmoEmpty())
+    {
+        EndFire();
+        return;
+    }
+
     if (!GetOwnersController()) EndFire();
+
 
     FVector StartPoint;
     FVector EndPoint;
@@ -29,6 +36,8 @@ void AKBRifleWeaponActor::MakeShot()
     GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_Visibility, TraceParams);
 
     FTransform MuzzleTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
+
+    DecreaseAmmo();
 
     if (HitResult.bBlockingHit)
     {
@@ -43,6 +52,7 @@ void AKBRifleWeaponActor::MakeShot()
     {
         DrawDebugLine(GetWorld(), MuzzleTransform.GetLocation(), EndPoint, FColor::Orange, false, 1.f);
     }
+
 }
 
 void AKBRifleWeaponActor::GetStartEndPoints(FVector& StartPoint, FVector& EndPoint)

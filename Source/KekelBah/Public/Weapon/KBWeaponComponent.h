@@ -8,6 +8,18 @@
 
 class AKBBaseWeaponActor;
 
+USTRUCT(BlueprintType)
+struct FWeaponData
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    TSubclassOf<AKBBaseWeaponActor> WeaponClass;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    UAnimMontage* ReloadAnim;
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class KEKELBAH_API UKBWeaponComponent : public UActorComponent
 {
@@ -20,6 +32,8 @@ public:
     void EndFire();
 
     void NextWeapon();
+    
+    void Reload();
 
 protected:
 
@@ -32,10 +46,29 @@ protected:
 
     void EquipWeapon(int32 WeaponIndex);
 
+    void PlayAnimMontage(UAnimMontage* AnimMontage);
+
+    void InitAnimations();
+
+    UFUNCTION()
+    void OnEquipFinished(USkeletalMeshComponent* MeshComp);
+
+    UFUNCTION()
+    void OnReloadFinished(USkeletalMeshComponent* MeshComp);
+
+    bool CanFire() const;
+
+    bool CanEquip() const;
+
+    bool CanReload() const;
+
+    void OnEmptyClip();
+    void ChangeClip();
+
 protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-    TArray<TSubclassOf<AKBBaseWeaponActor>> WeaponClasses;
+    TArray<FWeaponData> WeaponData;
 
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     FName WeaponEquipPointName = "WeaponPoint";
@@ -47,9 +80,30 @@ protected:
     AKBBaseWeaponActor* CurrentWeapon = nullptr;
 
     UPROPERTY()
+    UAnimMontage* CurrentReloadAnim = nullptr;
+
+    UPROPERTY()
     TArray<AKBBaseWeaponActor*> Weapons;
 
     int32 CurrentWeaponIndex = 0.f;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Animation")
+    UAnimMontage* ChangeWeaponAnimation;
+
+    bool bEquipInProgress = false;
+
+    bool bReloadInProgress = false;
+
+    template<typename T>
+    T* FindAnimNotifyByClass(UAnimSequenceBase* Animation) const
+    {
+        for(const auto NotifyEvent : Animation->Notifies)
+        {
+            T* Notify = Cast<T>(NotifyEvent.Notify);
+            if (IsValid(Notify)) return Notify;
+        }
+        return nullptr;
+    }
 
 public:	
 

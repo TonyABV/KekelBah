@@ -7,7 +7,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/Controller.h"
 
-DEFINE_LOG_CATEGORY_STATIC(BaseWeapon, All, All);
+DEFINE_LOG_CATEGORY_STATIC(BaseWeaponLog, All, All);
 
 AKBBaseWeaponActor::AKBBaseWeaponActor()
 {
@@ -22,6 +22,8 @@ void AKBBaseWeaponActor::BeginPlay()
 	Super::BeginPlay();
 
 	check(WeaponMesh);
+
+    CurrentAmmo = DefaultAmmo;
 }
 
 void AKBBaseWeaponActor::StartFire()
@@ -45,6 +47,49 @@ AController* AKBBaseWeaponActor::GetOwnersController() const
     if (!IsValid(Player)) return nullptr;
 
     return Player->GetController();
+}
+
+void AKBBaseWeaponActor::DecreaseAmmo()
+{
+    --CurrentAmmo.Bullets;
+    LogAmmo();
+    if (IsClipEmpty())
+    {
+        OnClipEmpty.Broadcast();
+    }
+}
+
+bool AKBBaseWeaponActor::IsAmmoEmpty() const
+{
+    return IsClipEmpty() && CurrentAmmo.Clips == 0 && !CurrentAmmo.bInfinityAmmo;
+}
+
+bool AKBBaseWeaponActor::IsClipEmpty() const
+{
+    return CurrentAmmo.Bullets == 0;
+}
+
+void AKBBaseWeaponActor::ChangeClip()
+{
+    if (!CurrentAmmo.bInfinityAmmo)
+    {
+        --CurrentAmmo.Clips;
+    }
+
+    CurrentAmmo.Bullets = DefaultAmmo.Bullets;
+    UE_LOG(BaseWeaponLog, Display, TEXT("-----CLIP CHANGED-----"));
+}
+
+bool AKBBaseWeaponActor::CanChangeClip() const
+{
+    return CurrentAmmo.Bullets < DefaultAmmo.Bullets && CurrentAmmo.Clips > 0;
+}
+
+void AKBBaseWeaponActor::LogAmmo() const
+{
+    FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + " / ";
+    AmmoInfo += CurrentAmmo.bInfinityAmmo ? "Infinite" : FString::FromInt(CurrentAmmo.Clips);
+    UE_LOG(BaseWeaponLog, Display, TEXT("%s"), *AmmoInfo);
 }
 
 bool AKBBaseWeaponActor::GetViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const

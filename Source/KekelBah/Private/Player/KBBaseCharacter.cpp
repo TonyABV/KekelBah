@@ -91,6 +91,7 @@ void AKBBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UKBWeaponComponent::StartFire);
     PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &UKBWeaponComponent::EndFire);
     PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, WeaponComponent, &UKBWeaponComponent::NextWeapon);
+    PlayerInputComponent->BindAction("Reload", IE_Pressed, WeaponComponent, &UKBWeaponComponent::Reload);
 }
 
 void AKBBaseCharacter::MoveForward(float Scale)
