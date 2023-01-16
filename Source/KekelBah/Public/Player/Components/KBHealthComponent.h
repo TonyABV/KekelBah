@@ -55,6 +55,9 @@ public:
 	UFUNCTION()
     void TryOnAutoHeal();
 
+	UFUNCTION(BlueprintCallable)
+	float GetHealthPercent() const;
+
 protected:
 
 	virtual void BeginPlay() override;

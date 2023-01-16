@@ -14,5 +14,20 @@ class KEKELBAH_API AKBHUD : public AHUD
 {
 	GENERATED_BODY()
 
+
+public:
+
 	virtual void DrawHUD() override;
+
+	virtual void BeginPlay() override;
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+    TSubclassOf<UUserWidget> PlayerHUDWidgetClass;
+
+protected:
+
+	void DrawCross();
+
 };

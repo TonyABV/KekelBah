@@ -74,6 +74,11 @@ void UKBHealthComponent::TryOnAutoHeal()
 
 }
 
+float UKBHealthComponent::GetHealthPercent() const
+{
+    return Health/MaxHealth;
+}
+
 void UKBHealthComponent::Heal(const float Value)
 {
     if (MaxHealth != Health)
