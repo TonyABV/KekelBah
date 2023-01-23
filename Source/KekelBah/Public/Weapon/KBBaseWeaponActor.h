@@ -26,6 +26,18 @@ struct FWeaponAmmo
     
 };
 
+USTRUCT(BlueprintType)
+struct FUIWeaponData
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    UTexture2D* CrossHairIcon;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    UTexture2D* WeaponIcon;
+};
+
 UCLASS()
 class KEKELBAH_API AKBBaseWeaponActor : public AActor
 {
@@ -48,6 +60,10 @@ public:
 
     FOnClipEmpty OnClipEmpty;
 
+    FUIWeaponData GetUIWeaponData() const { return UIWeaponData; }
+
+    FWeaponAmmo GetCurrentAmmoData() const { return CurrentAmmo; }
+
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
@@ -64,6 +80,9 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
     FWeaponAmmo DefaultAmmo{10, 5, false};
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    FUIWeaponData UIWeaponData;
 
 private:
 

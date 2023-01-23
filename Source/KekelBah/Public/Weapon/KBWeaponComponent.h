@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Weapon/KBBaseWeaponActor.h"
 #include "KBWeaponComponent.generated.h"
 
 class AKBBaseWeaponActor;
@@ -34,6 +35,10 @@ public:
     void NextWeapon();
     
     void Reload();
+
+    bool GetUIWeaponData(FUIWeaponData& UIWeaponData) const;
+
+    bool GetCurrentAmmoData(FWeaponAmmo& WeaponAmmo) const;
 
 protected:
 

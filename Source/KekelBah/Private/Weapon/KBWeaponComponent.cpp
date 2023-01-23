@@ -200,3 +200,21 @@ void UKBWeaponComponent::Reload()
 {
     ChangeClip();
 }
+
+bool UKBWeaponComponent::GetUIWeaponData(FUIWeaponData& UIWeaponData) const
+{
+    if (!CurrentWeapon) return false;
+
+    UIWeaponData = CurrentWeapon->GetUIWeaponData();
+
+    return true;
+}
+
+bool UKBWeaponComponent::GetCurrentAmmoData(FWeaponAmmo& WeaponAmmo) const
+{
+    if (!CurrentWeapon) return false;
+
+    WeaponAmmo = CurrentWeapon->GetCurrentAmmoData();
+
+    return true;
+}

@@ -9,8 +9,7 @@
 void AKBHUD::DrawHUD()
 {
     Super::DrawHUD();
-
-    DrawCross();
+    
 }
 
 void AKBHUD::BeginPlay()
