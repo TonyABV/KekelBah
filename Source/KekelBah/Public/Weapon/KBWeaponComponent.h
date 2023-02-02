@@ -40,6 +40,8 @@ public:
 
     bool GetCurrentAmmoData(FWeaponAmmo& WeaponAmmo) const;
 
+    bool TryAddAmmo(TSubclassOf<AKBBaseWeaponActor> WeaponType, int32 ClipAmount);
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -67,7 +69,7 @@ protected:
 
     bool CanReload() const;
 
-    void OnEmptyClip();
+    void OnEmptyClip(AKBBaseWeaponActor* EmptyWeapon);
     void ChangeClip();
 
 protected:

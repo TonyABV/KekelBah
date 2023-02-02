@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "KBBaseWeaponActor.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnClipEmpty);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmpty, AKBBaseWeaponActor*);
 
 class USkeletalMeshComponent;
 
@@ -58,11 +58,15 @@ public:
 
     bool CanChangeClip() const;
 
+    bool IsAmmoFull() const;
+
     FOnClipEmpty OnClipEmpty;
 
     FUIWeaponData GetUIWeaponData() const { return UIWeaponData; }
 
     FWeaponAmmo GetCurrentAmmoData() const { return CurrentAmmo; }
+
+    bool TryAddAmmo(int32 ClipAmount);
 
 protected:
 

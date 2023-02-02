@@ -142,9 +142,23 @@ bool UKBWeaponComponent::CanReload() const
            && CurrentWeapon->CanChangeClip();
 }
 
-void UKBWeaponComponent::OnEmptyClip()
+void UKBWeaponComponent::OnEmptyClip(AKBBaseWeaponActor* EmptyWeapon)
 {
-    ChangeClip();
+    if (EmptyWeapon && CurrentWeapon == EmptyWeapon)
+    {
+        ChangeClip();
+    }
+    else
+    {
+        for (auto Weapon : Weapons)
+        {
+            if (Weapon == EmptyWeapon)
+            {
+                EmptyWeapon->ChangeClip();
+            }
+        }
+    }
+    
 }
 
 void UKBWeaponComponent::ChangeClip()
@@ -217,4 +231,16 @@ bool UKBWeaponComponent::GetCurrentAmmoData(FWeaponAmmo& WeaponAmmo) const
     WeaponAmmo = CurrentWeapon->GetCurrentAmmoData();
 
     return true;
+}
+
+bool UKBWeaponComponent::TryAddAmmo(TSubclassOf<AKBBaseWeaponActor> WeaponType, int32 ClipAmount)
+{
+    for (auto Weapon : Weapons)
+    {
+        if (Weapon && Weapon->IsA(WeaponType))
+        {
+            return Weapon->TryAddAmmo(ClipAmount);
+        }
+    }
+    return false;
 }
