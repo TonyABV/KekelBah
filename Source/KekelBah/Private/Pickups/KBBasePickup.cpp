@@ -20,8 +20,8 @@ AKBBasePickup::AKBBasePickup()
 
 void AKBBasePickup::BeginPlay()
 {
-	Super::BeginPlay();
-	
+    Super::BeginPlay();
+    GenerateRandomYawRotation();
 }
 
 void AKBBasePickup::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -49,6 +49,7 @@ void AKBBasePickup::RespawnPickup()
 {
     GetRootComponent()->SetVisibility(true, true);
     CollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+    GenerateRandomYawRotation();
 }
 
 bool AKBBasePickup::GivePickupTo(APawn* PlayerPawn)
@@ -56,10 +57,23 @@ bool AKBBasePickup::GivePickupTo(APawn* PlayerPawn)
     return false;
 }
 
+void AKBBasePickup::GenerateRandomYawRotation()
+{
+    const auto Direction = FMath::RandBool() ? 1.f : -1.f;
+    YawRotation = FMath::FRandRange(1.f, 5.f) * Direction;
+}
+
 
 void AKBBasePickup::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+    AddActorLocalRotation(FRotator(0., YawRotation, 0.f));
+
+    float LifeTime = GetGameTimeSinceCreation();
+    
+    float Multiplier = FMath::Sin(LifeTime) * 200.f * DeltaTime;
+
+    AddActorLocalOffset(FVector(0.f, 0.f, Multiplier));
 }
 

@@ -79,11 +79,23 @@ float UKBHealthComponent::GetHealthPercent() const
     return Health/MaxHealth;
 }
 
+bool UKBHealthComponent::IsFullHealth() const
+{
+    return FMath::IsNearlyEqual(Health, MaxHealth);
+}
+
+bool UKBHealthComponent::TryAddHealth(float HealthAmount)
+{
+    if (HealthAmount <= 0.f || IsFullHealth()) return false;
+    Heal(HealthAmount);
+    return true;
+}
+
 void UKBHealthComponent::Heal(const float Value)
 {
     if (MaxHealth != Health)
     {
-        Health = FMath::Clamp(Health += Value, 0.f, MaxHealth);
+        Health = FMath::Clamp(Health + Value, 0.f, MaxHealth);
     }
 
     OnHealthChanged.Broadcast(Health);

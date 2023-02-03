@@ -58,6 +58,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetHealthPercent() const;
 
+	bool IsFullHealth() const;
+
+	bool TryAddHealth(float HealthAmount);
+
 protected:
 
 	virtual void BeginPlay() override;

@@ -25,6 +25,9 @@ protected:
 	UPROPERTY(EditAnywhere)
     float RespawnTime = 5.f;
 
+	float YawRotation = 0.f;
+
+	float MovementSpeed = 5.f;
 		
 protected:
 	// Called when the game starts or when spawned
@@ -40,6 +43,8 @@ private:
 
 	virtual bool GivePickupTo(APawn* Pawn);
 
+	void GenerateRandomYawRotation();
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
