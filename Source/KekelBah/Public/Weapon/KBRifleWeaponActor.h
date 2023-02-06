@@ -6,9 +6,8 @@
 #include "Weapon/KBBaseWeaponActor.h"
 #include "KBRifleWeaponActor.generated.h"
 
-/**
- * 
- */
+class UKBWeaponFXComponent;
+
 UCLASS()
 class KEKELBAH_API AKBRifleWeaponActor : public AKBBaseWeaponActor
 {
@@ -16,10 +15,15 @@ class KEKELBAH_API AKBRifleWeaponActor : public AKBBaseWeaponActor
 
 public:
 
+    AKBRifleWeaponActor();
+
     virtual void StartFire() override;
     virtual void EndFire() override;
 
 protected:
+
+    UPROPERTY(EditAnywhere, Category = "FXComponent")
+    UKBWeaponFXComponent* FXComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Fire")
     float TimeBetweenShots = 0.2f;
@@ -30,6 +34,8 @@ protected:
     FTimerHandle FireHandle;
 
 protected:
+
+    virtual void BeginPlay() override;
 
     virtual void MakeShot() override;
 

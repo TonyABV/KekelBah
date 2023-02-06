@@ -63,17 +63,21 @@ void AKBBasePickup::GenerateRandomYawRotation()
     YawRotation = FMath::FRandRange(1.f, 5.f) * Direction;
 }
 
+FVector AKBBasePickup::GetLocationOffset(float DeltaTime) const
+{
+    float LifeTime = GetGameTimeSinceCreation();
+
+    float Multiplier = FMath::Sin(LifeTime) * 200.f * DeltaTime;
+
+    return FVector(0.f, 0.f, Multiplier);
+}
+
 
 void AKBBasePickup::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
     AddActorLocalRotation(FRotator(0., YawRotation, 0.f));
-
-    float LifeTime = GetGameTimeSinceCreation();
-    
-    float Multiplier = FMath::Sin(LifeTime) * 200.f * DeltaTime;
-
-    AddActorLocalOffset(FVector(0.f, 0.f, Multiplier));
+    AddActorLocalOffset(GetLocationOffset(DeltaTime));
 }
 

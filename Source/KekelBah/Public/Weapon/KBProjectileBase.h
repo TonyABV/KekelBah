@@ -9,6 +9,7 @@
 
 class SphereComponent;
 class UProjectileMovementComponent;
+class UKBWeaponFXComponent;
 
 UCLASS()
 class KEKELBAH_API AKBProjectileBase : public AActor
@@ -23,6 +24,9 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
     UProjectileMovementComponent* MovementComponent;
+	
+    UPROPERTY(EditAnywhere, Category = "FXComponent")
+    UKBWeaponFXComponent* FXComponent;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
     float DamageRadius = 200.f;

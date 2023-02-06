@@ -44,6 +44,8 @@ private:
 	virtual bool GivePickupTo(APawn* Pawn);
 
 	void GenerateRandomYawRotation();
+
+	FVector GetLocationOffset(float DeltaTime) const;
 	
 public:	
 	// Called every frame

@@ -6,6 +6,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "KBWeaponFXComponent.h"
 
 // Sets default values
 AKBProjectileBase::AKBProjectileBase()
@@ -22,6 +23,8 @@ AKBProjectileBase::AKBProjectileBase()
 	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComponent");
     MovementComponent->InitialSpeed = 1000.f;
     MovementComponent->ProjectileGravityScale = 0.f;
+
+    FXComponent = CreateDefaultSubobject<UKBWeaponFXComponent>("FXComponent");
 }
 
 // Called when the game starts or when spawned
@@ -31,6 +34,7 @@ void AKBProjectileBase::BeginPlay()
 
     check(CollisionComponent);
     check(MovementComponent);
+    check(FXComponent);
 
     MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
 
@@ -58,6 +62,8 @@ void AKBProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActo
     Destroy();
 
     DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 16, FColor::Cyan, false, 1.f);
+
+    FXComponent->PlayImpactFX(Hit);
 }
 
 AController* AKBProjectileBase::GetOwnersController()

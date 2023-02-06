@@ -3,7 +3,14 @@
 
 #include "Weapon/KBRifleWeaponActor.h"
 #include "DrawDebugHelpers.h"
+#include "KBWeaponFXComponent.h"
+#include "KBWeaponFXComponent.h"
 
+
+AKBRifleWeaponActor::AKBRifleWeaponActor()
+{
+    FXComponent = CreateDefaultSubobject<UKBWeaponFXComponent>("FXComponent");
+}
 
 void AKBRifleWeaponActor::StartFire()
 {
@@ -13,6 +20,13 @@ void AKBRifleWeaponActor::StartFire()
 void AKBRifleWeaponActor::EndFire()
 {
     GetWorld()->GetTimerManager().ClearTimer(FireHandle);
+}
+
+void AKBRifleWeaponActor::BeginPlay()
+{
+    Super::BeginPlay();
+
+    check(FXComponent);
 }
 
 void AKBRifleWeaponActor::MakeShot()
@@ -47,6 +61,8 @@ void AKBRifleWeaponActor::MakeShot()
         if (!IsValid(HitResult.GetActor())) return;
 
         HitResult.GetActor()->TakeDamage(Damage, {}, GetOwnersController(), this);
+
+        FXComponent->PlayImpactFX(HitResult);
     }
     else
     {
