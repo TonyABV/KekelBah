@@ -3,6 +3,7 @@
 
 #include "Weapon/KBWeaponFXComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "PhysicalMaterials/PhysicalMaterial.h"
 
 
 UKBWeaponFXComponent::UKBWeaponFXComponent()
@@ -18,6 +19,16 @@ void UKBWeaponFXComponent::BeginPlay()
 
 void UKBWeaponFXComponent::PlayImpactFX(const FHitResult& HitResult)
 {
-    UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ImpactEffect, HitResult.ImpactPoint, HitResult.Normal.Rotation());
+    auto Effect = DefaultEffect;
+
+	if(HitResult.PhysMaterial.IsValid())
+	{
+        if (Effects.Contains(HitResult.PhysMaterial.Get()))
+        {
+            Effect = Effects[HitResult.PhysMaterial.Get()];
+        }
+	}
+
+    UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Effect, HitResult.ImpactPoint, HitResult.Normal.Rotation());
 }
 

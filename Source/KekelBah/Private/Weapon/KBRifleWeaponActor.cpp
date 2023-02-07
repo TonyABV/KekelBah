@@ -47,6 +47,7 @@ void AKBRifleWeaponActor::MakeShot()
     FHitResult HitResult;
     FCollisionQueryParams TraceParams;
     TraceParams.AddIgnoredActor(GetOwner());
+    TraceParams.bReturnPhysicalMaterial = true;
     GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_Visibility, TraceParams);
 
     FTransform MuzzleTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);

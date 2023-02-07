@@ -7,6 +7,7 @@
 #include "KBWeaponFXComponent.generated.h"
 
 class UNiagaraSystem;
+class UPhysicalMaterial;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class KEKELBAH_API UKBWeaponFXComponent : public UActorComponent
@@ -22,7 +23,10 @@ public:
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "VFX")
-    UNiagaraSystem* ImpactEffect;
+    UNiagaraSystem* DefaultEffect;
+
+    UPROPERTY(EditDefaultsOnly, Category = "VFX")
+    TMap<UPhysicalMaterial*, UNiagaraSystem*> Effects;
 
 protected:
 
