@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "KBCoreTypes.h"
 #include "KBWeaponFXComponent.generated.h"
 
-class UNiagaraSystem;
 class UPhysicalMaterial;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -23,10 +23,10 @@ public:
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "VFX")
-    UNiagaraSystem* DefaultEffect;
+    FImpactData DefaultImpactData;
 
     UPROPERTY(EditDefaultsOnly, Category = "VFX")
-    TMap<UPhysicalMaterial*, UNiagaraSystem*> Effects;
+    TMap<UPhysicalMaterial*, FImpactData> Effects;
 
 protected:
 

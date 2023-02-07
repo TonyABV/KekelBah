@@ -56,9 +56,6 @@ void AKBRifleWeaponActor::MakeShot()
 
     if (HitResult.bBlockingHit)
     {
-        DrawDebugLine(GetWorld(), MuzzleTransform.GetLocation(), HitResult.ImpactPoint, FColor::Orange, false, 1.f);
-        DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.f, 15.f, FColor::Red, false, 5.f);
-
         if (!IsValid(HitResult.GetActor())) return;
 
         HitResult.GetActor()->TakeDamage(Damage, {}, GetOwnersController(), this);
