@@ -1,43 +1,37 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "KBBaseWeaponActor.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Controller.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(BaseWeaponLog, All, All);
 
 AKBBaseWeaponActor::AKBBaseWeaponActor()
 {
-	PrimaryActorTick.bCanEverTick = false;
+    PrimaryActorTick.bCanEverTick = false;
 
-	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMesh");
+    WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMesh");
     SetRootComponent(WeaponMesh);
 }
 
 void AKBBaseWeaponActor::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
-	check(WeaponMesh);
+    check(WeaponMesh);
 
     CurrentAmmo = DefaultAmmo;
 }
 
-void AKBBaseWeaponActor::StartFire()
-{
-}
+void AKBBaseWeaponActor::StartFire() {}
 
-void AKBBaseWeaponActor::EndFire()
-{
-}
+void AKBBaseWeaponActor::EndFire() {}
 
-
-void AKBBaseWeaponActor::MakeShot()
-{
-}
+void AKBBaseWeaponActor::MakeShot() {}
 
 AController* AKBBaseWeaponActor::GetOwnersController() const
 {
@@ -129,6 +123,17 @@ void AKBBaseWeaponActor::LogAmmo() const
     UE_LOG(BaseWeaponLog, Display, TEXT("%s"), *AmmoInfo);
 }
 
+UNiagaraComponent* AKBBaseWeaponActor::SpawnMuzzleFX() const
+{
+    return UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX,  //
+        WeaponMesh,                                                //
+        MuzzleSocketName,                                          //
+        FVector::ZeroVector,                                       //
+        FRotator::ZeroRotator,                                     //
+        EAttachLocation::SnapToTarget,                             //
+        true);
+}
+
 bool AKBBaseWeaponActor::GetViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
 {
     AController* PC = GetOwnersController();
@@ -141,13 +146,10 @@ bool AKBBaseWeaponActor::GetTraceData(FVector& Start, FVector& End) const
 {
     FVector ViewLocation;
     FRotator ViewRotation;
-    if(!GetViewPoint(ViewLocation, ViewRotation)) return false;
+    if (!GetViewPoint(ViewLocation, ViewRotation)) return false;
     Start = ViewLocation;
     End = Start + ViewRotation.Vector() * TraceDistance;
     return true;
 }
 
-void AKBBaseWeaponActor::GetStartEndPoints(FVector& StartPoint, FVector& EndPoint)
-{
-}
-
+void AKBBaseWeaponActor::GetStartEndPoints(FVector& StartPoint, FVector& EndPoint) {}

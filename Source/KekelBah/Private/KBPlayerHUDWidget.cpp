@@ -41,6 +41,17 @@ bool UKBPlayerHUDWidget::IsPlayerSpectating()
     return Controller && Controller->GetStateName() == NAME_Spectating;
 }
 
+bool UKBPlayerHUDWidget::Initialize()
+{
+    HealthComponent = KBUtils::GetPlayerComponent<UKBHealthComponent>(GetOwningPlayerPawn());
+
+    if (!HealthComponent) return true;
+
+    HealthComponent->OnDamaged.AddUObject(this, &UKBPlayerHUDWidget::OnTakeDamage);
+
+    return Super::Initialize();
+}
+
 bool UKBPlayerHUDWidget::InitWeaponComponent()
 {
     const APawn* Owner = GetOwningPlayerPawn();

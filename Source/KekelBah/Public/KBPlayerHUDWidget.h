@@ -40,9 +40,14 @@ public:
     
     UFUNCTION(BlueprintCallable, Category = "UI")
     bool IsPlayerSpectating();
-    
-private:
 
+    virtual bool Initialize() override;
+    
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnTakeDamage();
+
+private:
+    
     bool InitWeaponComponent();
 
     bool InitHealthComponent();

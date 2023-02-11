@@ -42,4 +42,5 @@ void AKBLauncherWeaponActor::MakeShot()
     }
 
     DecreaseAmmo();
+    SpawnMuzzleFX();
 }

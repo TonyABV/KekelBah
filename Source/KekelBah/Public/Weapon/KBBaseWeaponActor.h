@@ -9,6 +9,10 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmpty, AKBBaseWeaponActor*);
 
 class USkeletalMeshComponent;
+class UNiagaraSystem;
+class UNiagaraComponent;
+
+
 
 USTRUCT(BlueprintType)
 struct FWeaponAmmo
@@ -88,6 +92,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     FUIWeaponData UIWeaponData;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    UNiagaraSystem* MuzzleFX;
+
 private:
 
     FWeaponAmmo CurrentAmmo;
@@ -109,4 +116,6 @@ protected:
     bool IsClipEmpty() const;
 
     void LogAmmo() const;
+
+    UNiagaraComponent* SpawnMuzzleFX() const;
 };

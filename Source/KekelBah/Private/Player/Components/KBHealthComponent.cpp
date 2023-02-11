@@ -3,6 +3,7 @@
 
 #include "Player/Components/KBHealthComponent.h"
 #include "KBAcidDamageType.h"
+#include "Camera/CameraShakeBase.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All);
 
@@ -21,6 +22,8 @@ bool UKBHealthComponent::IsDeath()
 void UKBHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+    check(CameSake);
 
 	Health = MaxHealth;
 
@@ -58,7 +61,7 @@ void UKBHealthComponent::OnTakeDamageHandle(
         }
 	}
 
-	UE_LOG(LogHealthComponent, Log, TEXT("Actor: %s, Damege: %f"), *(GetOwner()->GetName()), Damage);
+    PlayCameraShake();
 }
 
 void UKBHealthComponent::TryOnAutoHeal()
@@ -109,4 +112,16 @@ void UKBHealthComponent::Heal(const float Value)
 void UKBHealthComponent::StopAutoHeal()
 {
     GetWorld()->GetTimerManager().ClearTimer(AutoHealHandle);
+}
+
+void UKBHealthComponent::PlayCameraShake()
+{
+    if (IsDeath()) return;
+
+    APawn* Pawn = GetOwner<APawn>();
+    if (!Pawn)  return;
+
+    const auto Controller = Pawn->GetController<APlayerController>();
+    if (!Controller || !Controller->PlayerCameraManager) return;
+    Controller->PlayerCameraManager->StartCameraShake(CameSake);
 }

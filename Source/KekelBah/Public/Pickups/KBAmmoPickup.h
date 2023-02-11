@@ -15,6 +15,9 @@ class KEKELBAH_API AKBAmmoPickup : public AKBBasePickup
     GENERATED_BODY()
 
 protected:
+
+    virtual void BeginPlay() override;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
     TSubclassOf<AKBBaseWeaponActor> WeaponType;
 

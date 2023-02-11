@@ -44,6 +44,8 @@ void AKBBaseCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
+    check(GetMesh());
+
     HealthComponent->OnDead.AddUObject(this, &AKBBaseCharacter::OnDeath);
 
     HealthComponent->OnHealthChanged.AddUObject(this, &AKBBaseCharacter::OnHealthChanged);
@@ -129,7 +131,7 @@ void AKBBaseCharacter::SlowStepSwitcher()
 
 void AKBBaseCharacter::OnDeath()
 {
-    PlayAnimMontage(DeathAnim);
+    //PlayAnimMontage(DeathAnim);
     GetCharacterMovement()->DisableMovement();
     SetLifeSpan(5.f);
 
@@ -142,7 +144,8 @@ void AKBBaseCharacter::OnDeath()
 
     WeaponComponent->EndFire();
 
-    UE_LOG(LogTemp, Log, TEXT("%s death"), *GetName());
+    GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+    GetMesh()->SetSimulatePhysics(true);
 }
 
 void AKBBaseCharacter::OnHealthChanged(float NewHealth)

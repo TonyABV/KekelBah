@@ -8,13 +8,20 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogAmmoPickup, All, All)
 
+void AKBAmmoPickup::BeginPlay()
+{
+    Super::BeginPlay();
+
+    check(WeaponType)
+}
+
 bool AKBAmmoPickup::GivePickupTo(APawn* Pawn)
 {
     UKBHealthComponent* HealthComponent = KBUtils::GetPlayerComponent<UKBHealthComponent>(Pawn);
     if (!HealthComponent || HealthComponent->IsDeath()) return false;
 
     UKBWeaponComponent* WeaponComponent = KBUtils::GetPlayerComponent<UKBWeaponComponent>(Pawn);
-    if (WeaponComponent)
+    if (WeaponComponent && WeaponType)
     {
         return WeaponComponent->TryAddAmmo(WeaponType, ClipAmount);    
     }

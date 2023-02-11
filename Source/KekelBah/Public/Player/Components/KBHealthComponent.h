@@ -14,6 +14,8 @@ DECLARE_MULTICAST_DELEGATE(FOnFullHealth);
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, const float);
 
+class UCameraShakeBase;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class KEKELBAH_API UKBHealthComponent : public UActorComponent
 {
@@ -62,6 +64,9 @@ public:
 
 	bool TryAddHealth(float HealthAmount);
 
+	UPROPERTY(EditDefaultsOnly, Category = "VFX")
+    TSubclassOf<UCameraShakeBase> CameSake;
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -79,4 +84,7 @@ protected:
 
 	UFUNCTION()
     void StopAutoHeal();
+
+	UFUNCTION()
+    void PlayCameraShake();
 };

@@ -7,6 +7,8 @@
 #include "KBRifleWeaponActor.generated.h"
 
 class UKBWeaponFXComponent;
+class UNiagaraComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class KEKELBAH_API AKBRifleWeaponActor : public AKBBaseWeaponActor
@@ -33,6 +35,12 @@ protected:
 
     FTimerHandle FireHandle;
 
+    UPROPERTY()
+    UNiagaraComponent* MuzzleFXComponent;
+    
+    UPROPERTY(EditDefaultsOnly, Category = "VFX")
+    UNiagaraSystem* TraceFX;
+
 protected:
 
     virtual void BeginPlay() override;
@@ -41,4 +49,9 @@ protected:
 
     virtual  void GetStartEndPoints(FVector& StartPoint, FVector& EndPoint) override;
 
+    void InitMuzzleFX();
+
+    void SetMuzzleFXVisibility(bool IsVisible);
+
+    void SpawnTraceFX(FVector StartPoint, FVector EndPoint);
 };
