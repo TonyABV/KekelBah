@@ -81,7 +81,7 @@ protected:
     void CancelSprint();
     void SlowStepSwitcher();
 
-    void OnDeath();
+    virtual void OnDeath();
     
     void OnHealthChanged(float NewHealth);
     

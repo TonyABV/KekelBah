@@ -52,10 +52,7 @@ void AKBRifleWeaponActor::MakeShot()
     TraceParams.AddIgnoredActor(GetOwner());
     TraceParams.bReturnPhysicalMaterial = true;
     GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_Visibility, TraceParams);
-
-
-    DecreaseAmmo();
-    
+        
     if (HitResult.bBlockingHit)
     {
         EndPoint = HitResult.ImpactPoint;
@@ -69,6 +66,8 @@ void AKBRifleWeaponActor::MakeShot()
     FTransform MuzzleTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
     SpawnTraceFX(MuzzleTransform.GetLocation(), EndPoint);
     InitMuzzleFX();
+
+    DecreaseAmmo();
 }
 
 void AKBRifleWeaponActor::GetStartEndPoints(FVector& StartPoint, FVector& EndPoint)

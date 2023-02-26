@@ -30,7 +30,8 @@ void AKBLauncherWeaponActor::MakeShot()
 
     const FVector EndPoint = HitResult.bBlockingHit ? HitResult.ImpactPoint : TraceEnd;
     const FVector Direction = (EndPoint - WeaponMesh->GetSocketLocation(MuzzleSocketName)).GetSafeNormal();
-
+    //const FVector Direction =  WeaponMesh->GetSocketRotation(MuzzleSocketName).Vector();
+   
     const FTransform SpawnTransform(FRotator::ZeroRotator, WeaponMesh->GetSocketTransform(MuzzleSocketName).GetLocation());
     
     AKBProjectileBase* Projectile = GetWorld()->SpawnActorDeferred<AKBProjectileBase>(ProjectileClass, SpawnTransform);

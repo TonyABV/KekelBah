@@ -15,7 +15,9 @@ public class KekelBah : ModuleRules
             "Engine", 
             "InputCore", 
             "Niagara",
-			"PhysicsCore"
+			"PhysicsCore",
+            "NavigationSystem",
+			"GameplayTasks"
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
@@ -25,7 +27,12 @@ public class KekelBah : ModuleRules
             "KekelBah/Public/Player",
 			"KekelBah/Public/Player/Components",
 			"KekelBah/Public/Dev",
-			"KekelBah/Public/Weapon"
+			"KekelBah/Public/Weapon",
+			"KekelBah/Public/AI/Tasks",
+			"KekelBah/Public/AI/Services",
+			"KekelBah/Public/AI/EQS",
+			"KekelBah/Public/AI/Decorators"
+
 		});
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

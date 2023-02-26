@@ -28,10 +28,10 @@ public:
     UPROPERTY(EditAnywhere, Category = "FXComponent")
     UKBWeaponFXComponent* FXComponent;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
     float DamageRadius = 200.f;
 
-    UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 	float DamageAmount = 50.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
@@ -44,7 +44,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent*
+	virtual void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent*
         OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	AController* GetOwnersController();

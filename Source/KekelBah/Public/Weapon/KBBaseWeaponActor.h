@@ -72,18 +72,22 @@ public:
 
     bool TryAddAmmo(int32 ClipAmount);
 
+    bool IsAmmoEmpty() const;
+
+    bool IsClipEmpty() const;
+
 protected:
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* WeaponMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Fire")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire")
     FName MuzzleSocketName = "MuzzleSocket";
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Fire")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire")
     float TraceDistance = 1500.f;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Fire")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire")
     float Damage = 10.f;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
@@ -110,11 +114,7 @@ protected:
     AController* GetOwnersController() const;
 
     void DecreaseAmmo();
-
-    bool IsAmmoEmpty() const;
-
-    bool IsClipEmpty() const;
-
+    
     void LogAmmo() const;
 
     UNiagaraComponent* SpawnMuzzleFX() const;

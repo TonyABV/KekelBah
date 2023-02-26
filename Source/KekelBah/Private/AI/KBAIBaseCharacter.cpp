@@ -3,10 +3,32 @@
 
 #include "AI/KBAIBaseCharacter.h"
 #include "AI/KBAIController.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "KBAIWeaponComponent.h"
+#include "BrainComponent.h"
 
 AKBAIBaseCharacter::AKBAIBaseCharacter(const FObjectInitializer& ObjectInitializer)
-    : Super(ObjectInitializer)
+    : Super(ObjectInitializer.SetDefaultSubobjectClass<UKBAIWeaponComponent>("WeaponComponent"))
 {
     AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
     AIControllerClass = AKBAIController::StaticClass();
+
+    bUseControllerRotationYaw = false;
+    if (GetCharacterMovement())
+    {
+        GetCharacterMovement()->bUseControllerDesiredRotation = true;
+        GetCharacterMovement()->RotationRate = FRotator(0.f, 200.f, 0.f);
+    }
+}
+
+void AKBAIBaseCharacter::OnDeath()
+{
+    const auto AIController = Cast<AAIController>(Controller);
+
+    if (AIController && AIController->BrainComponent)
+    {
+        AIController->BrainComponent->Cleanup();
+    }
+
+    Super::OnDeath();
 }

@@ -29,10 +29,11 @@ class KEKELBAH_API UKBWeaponComponent : public UActorComponent
 public:	
 	UKBWeaponComponent();
 
-    void StartFire();
+    virtual void StartFire();
+
     void EndFire();
 
-    void NextWeapon();
+    virtual void NextWeapon();
     
     void Reload();
 
@@ -111,8 +112,4 @@ protected:
         }
         return nullptr;
     }
-
-public:	
-
-
 };

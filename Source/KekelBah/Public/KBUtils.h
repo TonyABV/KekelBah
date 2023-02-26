@@ -5,7 +5,7 @@ class KBUtils
 public:
 
 	template<typename T>
-    static T* GetPlayerComponent(APawn* Pawn)
+    static T* GetPlayerComponent(AActor* Pawn)
 	{
         if (!Pawn) return nullptr;
 

@@ -136,9 +136,23 @@ UNiagaraComponent* AKBBaseWeaponActor::SpawnMuzzleFX() const
 
 bool AKBBaseWeaponActor::GetViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
 {
-    AController* PC = GetOwnersController();
-    if (!IsValid(PC)) return false;
-    PC->GetPlayerViewPoint(ViewLocation, ViewRotation);
+    ACharacter* Character = GetOwner<ACharacter>();
+
+    if (!Character) return false;
+
+    if (Character->IsPlayerControlled())
+    {
+        AController* PC = GetOwnersController();
+        if (!IsValid(PC)) return false;
+        PC->GetPlayerViewPoint(ViewLocation, ViewRotation);
+    }
+    else
+    {
+        if (!WeaponMesh) return false;
+        ViewLocation = WeaponMesh->GetSocketLocation(MuzzleSocketName);
+        ViewRotation = WeaponMesh->GetSocketRotation(MuzzleSocketName);
+    }
+
     return true;
 }
 
