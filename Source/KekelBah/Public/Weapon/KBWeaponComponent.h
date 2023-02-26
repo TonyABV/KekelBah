@@ -43,9 +43,12 @@ public:
 
     bool TryAddAmmo(TSubclassOf<AKBBaseWeaponActor> WeaponType, int32 ClipAmount);
 
+    AKBBaseWeaponActor* GetWeapon(TSubclassOf<AKBBaseWeaponActor> WeaponClass);
+
 protected:
 
 	virtual void BeginPlay() override;
+
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
     void SpawnWeapons();
@@ -71,6 +74,7 @@ protected:
     bool CanReload() const;
 
     void OnEmptyClip(AKBBaseWeaponActor* EmptyWeapon);
+
     void ChangeClip();
 
 protected:

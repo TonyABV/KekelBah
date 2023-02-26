@@ -14,6 +14,10 @@ class KEKELBAH_API AKBAmmoPickup : public AKBBasePickup
 {
     GENERATED_BODY()
 
+public:
+
+    TSubclassOf<AKBBaseWeaponActor> GetWeaponType() const { return WeaponType; }
+
 protected:
 
     virtual void BeginPlay() override;
@@ -25,5 +29,7 @@ protected:
     int32 ClipAmount = 10;
 
 private:
+
     virtual bool GivePickupTo(APawn* Pawn) override;
+
 };

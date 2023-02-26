@@ -17,6 +17,11 @@ AKBBasePickup::AKBBasePickup()
     SetRootComponent(CollisionComponent);
 }
 
+bool AKBBasePickup::CanBeTaken() const
+{
+    return !GetWorld()->GetTimerManager().TimerExists(RespawnHandle);
+}
+
 
 void AKBBasePickup::BeginPlay()
 {
@@ -41,7 +46,6 @@ void AKBBasePickup::PickupWasTaken()
     CollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
     GetRootComponent()->SetVisibility(false, true);
 
-    FTimerHandle RespawnHandle;
     GetWorld()->GetTimerManager().SetTimer(RespawnHandle, this, &AKBBasePickup::RespawnPickup, RespawnTime);
 }
 

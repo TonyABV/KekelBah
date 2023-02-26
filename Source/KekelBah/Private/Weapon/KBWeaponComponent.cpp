@@ -235,12 +235,23 @@ bool UKBWeaponComponent::GetCurrentAmmoData(FWeaponAmmo& WeaponAmmo) const
 
 bool UKBWeaponComponent::TryAddAmmo(TSubclassOf<AKBBaseWeaponActor> WeaponType, int32 ClipAmount)
 {
-    for (auto Weapon : Weapons)
+    auto Weapon = GetWeapon(WeaponType);
+
+    if (Weapon)
     {
-        if (Weapon && Weapon->IsA(WeaponType))
-        {
-            return Weapon->TryAddAmmo(ClipAmount);
-        }
+        return Weapon->TryAddAmmo(ClipAmount);
     }
     return false;
+}
+
+AKBBaseWeaponActor* UKBWeaponComponent::GetWeapon(TSubclassOf<AKBBaseWeaponActor> WeaponClass)
+{
+    for (auto Weapon : Weapons)
+    {
+        if (Weapon && Weapon->IsA(WeaponClass))
+        {
+            return Weapon;
+        }
+    }
+    return nullptr;
 }

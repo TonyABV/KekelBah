@@ -14,8 +14,10 @@ class KEKELBAH_API AKBBasePickup : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+
 	AKBBasePickup();
+
+	bool CanBeTaken() const;
 
 protected:
 
@@ -28,7 +30,9 @@ protected:
 	float YawRotation = 0.f;
 
 	float MovementSpeed = 5.f;
-		
+
+    FTimerHandle RespawnHandle;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
