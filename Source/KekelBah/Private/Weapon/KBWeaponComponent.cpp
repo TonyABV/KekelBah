@@ -70,9 +70,7 @@ void UKBWeaponComponent::EquipWeapon(int32 WeaponIndex)
         UE_LOG(LogTemp, Warning, TEXT("EquipWeapon: Invalid WeaponIndex: %i"), WeaponIndex);
         return;
     }
-
-    if (!CanEquip()) return;
-
+    
     ACharacter* OwnerChar = Cast<ACharacter>(GetOwner());
 
     if (!OwnerChar) return;
@@ -206,6 +204,8 @@ void UKBWeaponComponent::EndFire()
 
 void UKBWeaponComponent::NextWeapon()
 {
+    if (!CanEquip()) return;
+
     CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
     EquipWeapon(CurrentWeaponIndex);
 }

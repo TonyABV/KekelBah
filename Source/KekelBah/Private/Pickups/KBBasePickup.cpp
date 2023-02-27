@@ -81,7 +81,7 @@ void AKBBasePickup::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    AddActorLocalRotation(FRotator(0., YawRotation, 0.f));
-    AddActorLocalOffset(GetLocationOffset(DeltaTime));
+    //AddActorLocalRotation(FRotator(0., YawRotation, 0.f));
+    //AddActorLocalOffset(GetLocationOffset(DeltaTime));
 }
 

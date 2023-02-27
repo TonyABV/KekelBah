@@ -61,6 +61,8 @@ void AKBRifleWeaponActor::MakeShot()
         HitResult.GetActor()->TakeDamage(Damage, {}, GetOwnersController(), this);
 
         FXComponent->PlayImpactFX(HitResult);
+
+        EndPoint = HitResult.ImpactPoint;
     }
 
     FTransform MuzzleTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
@@ -112,6 +114,6 @@ void AKBRifleWeaponActor::SpawnTraceFX(FVector StartPoint, FVector EndPoint)
 
     if (TraceFXComponent)
     {
-        TraceFXComponent->SetNiagaraVariableVec3("EndLocation", EndPoint);
+        TraceFXComponent->SetNiagaraVariableVec3(TraceTargetName, EndPoint);
     }
 }

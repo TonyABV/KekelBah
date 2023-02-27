@@ -20,6 +20,8 @@ void UKBAIWeaponComponent::StartFire()
 
 void UKBAIWeaponComponent::NextWeapon()
 {
+    if (!CanEquip()) return;
+
     int32 NextWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
 
     while (NextWeaponIndex != CurrentWeaponIndex)

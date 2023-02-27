@@ -41,6 +41,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "VFX")
     UNiagaraSystem* TraceFX;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    FString TraceTargetName = "TraceTarget";
+
 protected:
 
     virtual void BeginPlay() override;
