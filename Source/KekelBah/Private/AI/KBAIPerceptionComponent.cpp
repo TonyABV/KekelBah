@@ -32,7 +32,10 @@ AActor* UKBAIPerceptionComponent::GetClosestEnemy() const
 
         UKBHealthComponent* HealthComponent = KBUtils::GetPlayerComponent<UKBHealthComponent>(Actor);
 
-        if (!HealthComponent || HealthComponent->IsDeath()) continue; // todo: check is enemy or not
+        const APawn* OtherPawn = Cast<APawn>(Actor);
+        const bool AreEnemies = OtherPawn && KBUtils::AreEnemies(Controller, OtherPawn->GetController());
+
+        if (!HealthComponent || HealthComponent->IsDeath() || !AreEnemies) continue;
 
         float Distance = FVector::Dist(PawnLocation, ActorLocation);
         if(ClosestDistance > Distance)

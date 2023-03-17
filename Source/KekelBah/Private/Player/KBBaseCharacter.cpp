@@ -175,3 +175,11 @@ float AKBBaseCharacter::GetMovementDirection()
 
     return AngleBetweene * Sign;
 }
+
+void AKBBaseCharacter::SetPlayerColor(const FLinearColor& LinearColor)
+{
+    const auto MaterialInstance = GetMesh()->CreateAndSetMaterialInstanceDynamic(0);
+    if (!MaterialInstance) return;
+
+    MaterialInstance->SetVectorParameterValue(MaterialColorName, LinearColor);
+}

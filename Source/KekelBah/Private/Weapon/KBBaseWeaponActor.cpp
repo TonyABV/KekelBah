@@ -71,7 +71,7 @@ void AKBBaseWeaponActor::ChangeClip()
     }
 
     CurrentAmmo.Bullets = DefaultAmmo.Bullets;
-    UE_LOG(BaseWeaponLog, Display, TEXT("-----CLIP CHANGED-----"));
+    //UE_LOG(BaseWeaponLog, Display, TEXT("-----CLIP CHANGED-----"));
 }
 
 bool AKBBaseWeaponActor::CanChangeClip() const
@@ -92,7 +92,7 @@ bool AKBBaseWeaponActor::TryAddAmmo(int32 ClipAmount)
     {
         CurrentAmmo.Clips = FMath::Clamp(ClipAmount, 0, DefaultAmmo.Clips + 1);
         OnClipEmpty.Broadcast(this);
-        UE_LOG(BaseWeaponLog, Display, TEXT("Ammo was empty"));
+        //UE_LOG(BaseWeaponLog, Display, TEXT("Ammo was empty"));
     }
     else if (CurrentAmmo.Clips < DefaultAmmo.Clips)
     {
@@ -100,17 +100,17 @@ bool AKBBaseWeaponActor::TryAddAmmo(int32 ClipAmount)
         if (Difference >= ClipAmount)
         {
             CurrentAmmo.Clips += ClipAmount;
-            UE_LOG(BaseWeaponLog, Display, TEXT("Clips were added"));
+            //UE_LOG(BaseWeaponLog, Display, TEXT("Clips were added"));
         }
         {
             CurrentAmmo.Clips = DefaultAmmo.Clips;
             CurrentAmmo.Bullets = DefaultAmmo.Bullets;
-            UE_LOG(BaseWeaponLog, Display, TEXT("Ammo is full now"));
+            //UE_LOG(BaseWeaponLog, Display, TEXT("Ammo is full now"));
         }
     }
     {
         CurrentAmmo.Bullets = DefaultAmmo.Bullets;
-        UE_LOG(BaseWeaponLog, Display, TEXT("Bullets were added"));
+        //UE_LOG(BaseWeaponLog, Display, TEXT("Bullets were added"));
     }
 
     return true;
@@ -120,7 +120,7 @@ void AKBBaseWeaponActor::LogAmmo() const
 {
     FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + " / ";
     AmmoInfo += CurrentAmmo.bInfinityAmmo ? "Infinite" : FString::FromInt(CurrentAmmo.Clips);
-    UE_LOG(BaseWeaponLog, Display, TEXT("%s"), *AmmoInfo);
+    //UE_LOG(BaseWeaponLog, Display, TEXT("%s"), *AmmoInfo);
 }
 
 UNiagaraComponent* AKBBaseWeaponActor::SpawnMuzzleFX() const

@@ -10,7 +10,7 @@
 AKBAIBaseCharacter::AKBAIBaseCharacter(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer.SetDefaultSubobjectClass<UKBAIWeaponComponent>("WeaponComponent"))
 {
-    AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+    AutoPossessAI = EAutoPossessAI::Disabled;
     AIControllerClass = AKBAIController::StaticClass();
 
     bUseControllerRotationYaw = false;

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "KBPlayerState.h"
 #include "GameFramework/Character.h"
 #include "KBBaseCharacter.generated.h"
 
@@ -66,6 +67,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Damage")
     FVector2D LandVelocityRangeForDamage = FVector2D{500.f, 1000.f};
 
+    UPROPERTY(EditDefaultsOnly, Category = "Material")
+    FName MaterialColorName = "Paint Color";
+
 protected:
 
     UFUNCTION()
@@ -94,5 +98,6 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Movement")
     float GetMovementDirection();
-    
+
+    void SetPlayerColor(const FLinearColor& LinearColor);
 };

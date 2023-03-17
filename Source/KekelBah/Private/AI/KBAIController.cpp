@@ -11,6 +11,8 @@ AKBAIController::AKBAIController(const FObjectInitializer& ObjectInitializer) : 
     KBPerceptionComponent = CreateDefaultSubobject<UKBAIPerceptionComponent>("PerceptionComponent");
 
     SetPerceptionComponent(*KBPerceptionComponent);
+
+    bWantsPlayerState = true;
 }
 
 void AKBAIController::OnPossess(APawn* InPawn)
