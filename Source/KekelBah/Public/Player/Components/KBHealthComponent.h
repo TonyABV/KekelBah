@@ -87,4 +87,7 @@ protected:
 
 	UFUNCTION()
     void PlayCameraShake();
+
+	void Killed(AController* KillerController);
+
 };

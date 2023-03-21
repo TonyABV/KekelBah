@@ -5,11 +5,14 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Weapon/KBBaseWeaponActor.h"
+#include "KBCoreTypes.h"
 #include "KBPlayerHUDWidget.generated.h"
 
 
 class UKBWeaponComponent;
 class UKBHealthComponent;
+class AKBGameModeBase;
+class AKBPlayerState;
 
 UCLASS()
 class KEKELBAH_API UKBPlayerHUDWidget : public UUserWidget
@@ -23,6 +26,12 @@ protected:
 
     UPROPERTY()
     UKBHealthComponent* HealthComponent;
+
+    UPROPERTY()
+    AKBGameModeBase* GameMode;
+
+    UPROPERTY()
+    AKBPlayerState* PlayerState;
     
 public:
 
@@ -40,6 +49,21 @@ public:
     
     UFUNCTION(BlueprintCallable, Category = "UI")
     bool IsPlayerSpectating();
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    bool GetPlayerKills(int32& Kills);
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    bool GetPlayerDeaths(int32& Deaths);
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    bool GetRoundTime(int32& RoundTime);
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    bool GetCurrentRound(int32& RoundTime);
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    bool GetRoundNum(int32& RoundTime);
 
     virtual bool Initialize() override;
     

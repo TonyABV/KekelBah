@@ -4,6 +4,7 @@
 #include "Player/Components/KBHealthComponent.h"
 #include "KBAcidDamageType.h"
 #include "Camera/CameraShakeBase.h"
+#include "KBGameModeBase.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All);
 
@@ -51,7 +52,11 @@ void UKBHealthComponent::OnTakeDamageHandle(
 
 	OnHealthChanged.Broadcast(Health);
 
-	if (FMath::IsNearlyZero(Health)) OnDead.Broadcast();
+	if (FMath::IsNearlyZero(Health))
+    {
+        Killed(InstigatedBy);
+        OnDead.Broadcast();
+    }
 
 	if (IsValid(DamageType))
 	{
@@ -124,4 +129,15 @@ void UKBHealthComponent::PlayCameraShake()
     const auto Controller = Pawn->GetController<APlayerController>();
     if (!Controller || !Controller->PlayerCameraManager) return;
     Controller->PlayerCameraManager->StartCameraShake(CameSake);
+}
+
+void UKBHealthComponent::Killed(AController* KillerController)
+{
+    AKBGameModeBase* GameMode = Cast<AKBGameModeBase>(GetWorld()->GetAuthGameMode());
+    if (!GameMode) return;
+
+    const auto Player = GetOwner();
+    if (!Player) return;
+
+    GameMode->Killed(KillerController, Cast<AController>(Player->GetOwner()));
 }

@@ -59,3 +59,15 @@ struct FGameData
     TArray<FLinearColor> TeamColors;
 
 };
+
+USTRUCT(BlueprintType)
+struct FCurrentGameData
+{
+    GENERATED_BODY()
+
+    int32 CurrentRound;
+
+    int32 RoundNum;
+
+    int32 CurrentTime;
+};

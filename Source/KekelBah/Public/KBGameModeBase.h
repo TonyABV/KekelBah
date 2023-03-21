@@ -22,6 +22,14 @@ public:
 
 	virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
 
+	void Killed(AController* KillerController, AController* VictimController);
+
+	int32 GetCurrentRound() const { return CurrentRound; }
+
+	int32 GetMaxRound() const { return GameData.RoundNum; }
+
+	int32 GetCurrentRoundTime() const { return RoundCountDown; }
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Game")
@@ -50,4 +58,5 @@ private:
     FLinearColor DetermineColorByTeamID(int32 TeamID) const;
     void SetPlayerColor(AController* Controller);
 
+	void LogPlayerInfo();
 };

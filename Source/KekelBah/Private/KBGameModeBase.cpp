@@ -40,6 +40,15 @@ UClass* AKBGameModeBase::GetDefaultPawnClassForController_Implementation(AContro
     return Super::GetDefaultPawnClassForController_Implementation(InController);
 }
 
+void AKBGameModeBase::Killed(AController* KillerController, AController* VictimController)
+{
+    AKBPlayerState* KillerState = KillerController ? KillerController->GetPlayerState<AKBPlayerState>() : nullptr;
+    AKBPlayerState* VictimState = VictimController ? VictimController->GetPlayerState<AKBPlayerState>() : nullptr;
+
+    if (KillerState) KillerState->AddKill();
+    if (VictimState) VictimState->AddDeath();
+}
+
 void AKBGameModeBase::SpawnBots()
 {
     if (!AIControllerClass) return;
@@ -73,14 +82,16 @@ void AKBGameModeBase::GameTimerUpdate()
     {
         GetWorldTimerManager().ClearTimer(StartRoundTimerHandle);
 
-        if (++CurrentRound != GameData.RoundNum + 1)
+        if (CurrentRound + 1 != GameData.RoundNum + 1)
         {
             UE_LOG(LogKBGameMode, Display, TEXT("----End Round----"));
             ResetPlayers();
             StartRound();
+            ++CurrentRound;
         }
         else
         {
+            LogPlayerInfo();
             UE_LOG(LogKBGameMode, Display, TEXT("----EndGame----"));
         }
     }
@@ -149,4 +160,18 @@ void AKBGameModeBase::SetPlayerColor(AController* Controller)
     if (!PlayerState) return;;
 
     Char->SetPlayerColor(PlayerState->GetTeamColor());
+}
+
+void AKBGameModeBase::LogPlayerInfo()
+{
+    for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
+    {
+        AController* Controller = It->Get();
+        if (!Controller) continue;
+
+        AKBPlayerState* PlayerState = Controller->GetPlayerState<AKBPlayerState>();
+        if (!PlayerState) continue;
+
+        PlayerState->LogInfo();
+    }
 }
