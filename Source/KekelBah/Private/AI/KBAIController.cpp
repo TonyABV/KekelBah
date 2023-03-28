@@ -5,6 +5,7 @@
 #include "AI/KBAIBaseCharacter.h"
 #include "AI/KBAIPerceptionComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "KBRespawnComponent.h"
 
 AKBAIController::AKBAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -13,6 +14,8 @@ AKBAIController::AKBAIController(const FObjectInitializer& ObjectInitializer) : 
     SetPerceptionComponent(*KBPerceptionComponent);
 
     bWantsPlayerState = true;
+        
+    RespawnComponent = CreateDefaultSubobject<UKBRespawnComponent>("RespawnComponent");
 }
 
 void AKBAIController::OnPossess(APawn* InPawn)

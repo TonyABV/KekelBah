@@ -12,6 +12,7 @@
 #include "KBBaseWeaponActor.h"
 #include "KBWeaponComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(BaseChar, All, All);
 
@@ -37,6 +38,11 @@ AKBBaseCharacter::AKBBaseCharacter(const FObjectInitializer& ObjectInitializer)
     TextRenderComponent->SetOwnerNoSee(false);
 
     WeaponComponent = CreateDefaultSubobject<UKBWeaponComponent>("WeaponComponent");
+
+    CameraCollisionComponent = CreateDefaultSubobject<USphereComponent>("CameraCollisionComponent");
+    CameraCollisionComponent->SetupAttachment(CameraComponent);
+    CameraCollisionComponent->SetSphereRadius(10.f);
+    CameraCollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 }
 
 // Called when the game starts or when spawned
@@ -52,6 +58,9 @@ void AKBBaseCharacter::BeginPlay()
     OnHealthChanged(HealthComponent->GetCurrentHealth());
 
     LandedDelegate.AddDynamic(this, &AKBBaseCharacter::OnGroundLanded);
+
+    CameraCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AKBBaseCharacter::OnCameraCollisionBeginOverlap);
+    CameraCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &AKBBaseCharacter::OnCameraCollisionEndOverlap);
 
 }
 
@@ -151,6 +160,36 @@ void AKBBaseCharacter::OnDeath()
 void AKBBaseCharacter::OnHealthChanged(float NewHealth)
 {
     TextRenderComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), NewHealth)));
+}
+
+void AKBBaseCharacter::OnCameraCollisionBeginOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor,
+    UPrimitiveComponent* PrimitiveComponent1, int I, bool bArg, const FHitResult& HitResult)
+{
+    CheckOverlap();
+}
+
+void AKBBaseCharacter::OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent,
+    AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+    CheckOverlap();
+}
+
+void AKBBaseCharacter::CheckOverlap()
+{
+    const bool HideMesh = CameraCollisionComponent->IsOverlappingComponent(GetCapsuleComponent());
+    GetMesh()->SetOwnerNoSee(HideMesh);
+
+    TArray<USceneComponent*> ChildrenComponents;
+    GetMesh()->GetChildrenComponents(true, ChildrenComponents);
+
+    for (auto Child : ChildrenComponents)
+    {
+        const auto ChildPrimComp = Cast<UPrimitiveComponent>(Child);
+        if (ChildPrimComp)
+        {
+            ChildPrimComp->SetOwnerNoSee(HideMesh);
+        }
+    }
 }
 
 bool AKBBaseCharacter::IsSlowStepping()

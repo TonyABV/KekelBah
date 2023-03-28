@@ -28,7 +28,11 @@ public:
 
 	int32 GetMaxRound() const { return GameData.RoundNum; }
 
-	int32 GetCurrentRoundTime() const { return RoundCountDown; }
+	float GetCurrentRoundTime() const;
+
+	void StartRespawn(AController* Controller);
+
+    void RespawnRequest(AController* Controller);
 
 protected:
 
@@ -44,12 +48,13 @@ protected:
 private:
 
 	int32 CurrentRound = 0;
-	int32 RoundCountDown = 0;
 	FTimerHandle StartRoundTimerHandle;
 
 	void SpawnBots();
     void StartRound();
-    void GameTimerUpdate();
+    void EndRound();
+
+	void GameOver();
 
 	void ResetPlayers();
     void ResetOnePlayer(AController* Controller);

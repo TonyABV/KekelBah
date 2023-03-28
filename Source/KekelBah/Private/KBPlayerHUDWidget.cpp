@@ -57,7 +57,7 @@ bool UKBPlayerHUDWidget::GetPlayerDeaths(int32& Deaths)
     return true;
 }
 
-bool UKBPlayerHUDWidget::GetRoundTime(int32& RoundTime)
+bool UKBPlayerHUDWidget::GetRoundTime(float& RoundTime)
 {
     if (!GameMode) return false;
 
@@ -86,16 +86,15 @@ bool UKBPlayerHUDWidget::GetRoundNum(int32& RoundNum)
 
 bool UKBPlayerHUDWidget::Initialize()
 {
-    HealthComponent = KBUtils::GetPlayerComponent<UKBHealthComponent>(GetOwningPlayerPawn());
+    if (!GetOwningPlayer()) return false;
 
-    if (!HealthComponent) return true;
-
-    HealthComponent->OnDamaged.AddUObject(this, &UKBPlayerHUDWidget::OnTakeDamage);
+    GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &UKBPlayerHUDWidget::OnNewPawn);
+    OnNewPawn(GetOwningPlayerPawn());
 
     PlayerState = GetOwningPlayerState<AKBPlayerState>();
 
     if (GetWorld()) GameMode = Cast<AKBGameModeBase>(GetWorld()->GetAuthGameMode());
-   
+
     return Super::Initialize();
 }
 
@@ -119,4 +118,15 @@ bool UKBPlayerHUDWidget::InitHealthComponent()
     if (HealthComponent) return true;
 
     return false;
+}
+
+void UKBPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
+{
+    if (!NewPawn) return;
+
+    HealthComponent = KBUtils::GetPlayerComponent<UKBHealthComponent>(NewPawn);
+
+    if (!HealthComponent) return;
+
+    HealthComponent->OnDamaged.AddUObject(this, &UKBPlayerHUDWidget::OnTakeDamage);
 }

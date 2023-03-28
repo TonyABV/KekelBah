@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "KBRespawnComponent.h"
 #include "KBAIController.generated.h"
 
 
@@ -29,6 +30,9 @@ public:
 		
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
     FName EnemyKeyName = "EnemyActor";
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "RespawnComponent")
+    UKBRespawnComponent* RespawnComponent;
 
 protected:
 

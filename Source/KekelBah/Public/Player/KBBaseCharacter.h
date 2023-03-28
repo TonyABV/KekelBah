@@ -13,6 +13,7 @@ class UKBHealthComponent;
 class UTextRenderComponent;
 class AKBBaseWeaponActor;
 class UKBWeaponComponent;
+class USphereComponent;
 
 UCLASS()
 class KEKELBAH_API AKBBaseCharacter : public ACharacter
@@ -40,8 +41,11 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TextComponent")
     UTextRenderComponent* TextRenderComponent;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WeaponComponent")
     UKBWeaponComponent* WeaponComponent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CameraCollisionComponent")
+    USphereComponent* CameraCollisionComponent;
 
     UPROPERTY()
     bool bWantSprinting = false;
@@ -88,7 +92,16 @@ protected:
     virtual void OnDeath();
     
     void OnHealthChanged(float NewHealth);
+
+    UFUNCTION()
+    void OnCameraCollisionBeginOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, int I,
+        bool bArg, const FHitResult& HitResult);
+
+    UFUNCTION()
+    void OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
     
+    void CheckOverlap();
+
 public:
     UFUNCTION(BlueprintCallable, Category = "Movement")
     bool IsSlowStepping();

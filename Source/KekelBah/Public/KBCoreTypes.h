@@ -57,17 +57,7 @@ struct FGameData
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
     TArray<FLinearColor> TeamColors;
-
-};
-
-USTRUCT(BlueprintType)
-struct FCurrentGameData
-{
-    GENERATED_BODY()
-
-    int32 CurrentRound;
-
-    int32 RoundNum;
-
-    int32 CurrentTime;
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", meta = (ClampMin = "1", ClampMax = "20"))
+    int32 RespawnTime = 5;
 };

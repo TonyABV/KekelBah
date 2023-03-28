@@ -2,4 +2,9 @@
 
 
 #include "KBBasePlayerController.h"
+#include "KBRespawnComponent.h"
 
+AKBBasePlayerController::AKBBasePlayerController()
+{
+    RespawnComponent = CreateDefaultSubobject<UKBRespawnComponent>("RespawnComponent");
+}

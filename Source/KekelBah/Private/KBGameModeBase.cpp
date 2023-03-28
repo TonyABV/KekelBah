@@ -6,6 +6,9 @@
 #include "KBHUD.h"
 #include "AIController.h"
 #include "KBPlayerState.h"
+#include "KBUtils.h"
+#include "KBRespawnComponent.h"
+#include "EngineUtils.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogKBGameMode, All, All);
 
@@ -47,6 +50,29 @@ void AKBGameModeBase::Killed(AController* KillerController, AController* VictimC
 
     if (KillerState) KillerState->AddKill();
     if (VictimState) VictimState->AddDeath();
+
+    StartRespawn(VictimController);
+}
+
+float AKBGameModeBase::GetCurrentRoundTime() const
+{
+    return GetWorldTimerManager().GetTimerRemaining(StartRoundTimerHandle);
+}
+
+void AKBGameModeBase::StartRespawn(AController* Controller)
+{
+    if (GetCurrentRoundTime() < GameData.RespawnTime) return;
+
+    UKBRespawnComponent* RespawnComponent = KBUtils::GetPlayerComponent<UKBRespawnComponent>(Controller);
+
+    if (!RespawnComponent) return;
+
+    RespawnComponent->RespawnWithDelay(GameData.RespawnTime);
+}
+
+void AKBGameModeBase::RespawnRequest(AController* Controller)
+{
+    ResetOnePlayer(Controller);
 }
 
 void AKBGameModeBase::SpawnBots()
@@ -65,36 +91,45 @@ void AKBGameModeBase::SpawnBots()
 
 void AKBGameModeBase::StartRound()
 {
-    RoundCountDown = GameData.RoundTime;
 
     GetWorldTimerManager().SetTimer(StartRoundTimerHandle,  //
         this,                                               //
-        &AKBGameModeBase::GameTimerUpdate,                  //
-        1.f,                                                //
+        &AKBGameModeBase::EndRound,                         //
+        GameData.RoundTime,                                 //
         true);
 }
 
-void AKBGameModeBase::GameTimerUpdate()
+void AKBGameModeBase::EndRound()
 {
-    UE_LOG(LogKBGameMode, Display, TEXT("Time: %i, Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundNum);
-    
-    if (--RoundCountDown == 0)
-    {
-        GetWorldTimerManager().ClearTimer(StartRoundTimerHandle);
+    UE_LOG(LogKBGameMode, Display, TEXT("Round: %i/%i"), CurrentRound, GameData.RoundNum);
 
-        if (CurrentRound + 1 != GameData.RoundNum + 1)
+    GetWorldTimerManager().ClearTimer(StartRoundTimerHandle);
+
+    if (CurrentRound + 1 != GameData.RoundNum + 1)
+    {
+        UE_LOG(LogKBGameMode, Display, TEXT("----End Round----"));
+        ResetPlayers();
+        StartRound();
+        ++CurrentRound;
+    }
+    else
+    {
+        GameOver();
+    }
+}
+
+void AKBGameModeBase::GameOver()
+{
+    for (auto Pawn: TActorRange<APawn>(GetWorld()))
+    {
+        if (Pawn)
         {
-            UE_LOG(LogKBGameMode, Display, TEXT("----End Round----"));
-            ResetPlayers();
-            StartRound();
-            ++CurrentRound;
-        }
-        else
-        {
-            LogPlayerInfo();
-            UE_LOG(LogKBGameMode, Display, TEXT("----EndGame----"));
+            Pawn->TurnOff();
+            Pawn->DisableInput(nullptr);
         }
     }
+    LogPlayerInfo();
+    UE_LOG(LogKBGameMode, Display, TEXT("----EndGame----"));
 }
 
 void AKBGameModeBase::ResetPlayers()
@@ -126,7 +161,8 @@ void AKBGameModeBase::CreateTeamsInfo()
     for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
     {
         AController* Controller = It->Get();
-        if (!Controller) continue;;
+        if (!Controller) continue;
+        ;
 
         AKBPlayerState* PlayerState = Controller->GetPlayerState<AKBPlayerState>();
         if (!PlayerState) continue;
@@ -137,7 +173,6 @@ void AKBGameModeBase::CreateTeamsInfo()
 
         TeamID = TeamID == 1 ? 2 : 1;
     }
-
 }
 
 FLinearColor AKBGameModeBase::DetermineColorByTeamID(int32 TeamID) const
@@ -157,7 +192,8 @@ void AKBGameModeBase::SetPlayerColor(AController* Controller)
     if (!Char) return;
 
     AKBPlayerState* PlayerState = Controller->GetPlayerState<AKBPlayerState>();
-    if (!PlayerState) return;;
+    if (!PlayerState) return;
+    ;
 
     Char->SetPlayerColor(PlayerState->GetTeamColor());
 }

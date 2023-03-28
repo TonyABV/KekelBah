@@ -57,7 +57,7 @@ public:
     bool GetPlayerDeaths(int32& Deaths);
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    bool GetRoundTime(int32& RoundTime);
+    bool GetRoundTime(float& RoundTime);
 
     UFUNCTION(BlueprintCallable, Category = "UI")
     bool GetCurrentRound(int32& RoundTime);
@@ -75,5 +75,7 @@ private:
     bool InitWeaponComponent();
 
     bool InitHealthComponent();
+
+    void OnNewPawn(APawn* NewPawn);
     
 };
