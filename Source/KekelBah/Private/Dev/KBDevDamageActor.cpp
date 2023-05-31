@@ -22,14 +22,16 @@ void AKBDevDamageActor::BeginPlay()
 	Super::BeginPlay();
 
 	FTimerHandle DamageHandle;
+
     GetWorld()->GetTimerManager().SetTimer(
-        DamageHandle,
-        [=]()
-        {
-            UGameplayStatics::ApplyRadialDamage(
-                GetWorld(), Damage, GetActorLocation(), SphereRadius, DamageType, {}, this, GetInstigatorController(), true);
-        },
+        DamageHandle, this, &AKBDevDamageActor::ApplyDamage,
         DamageSpan, true, DamageSpan);
+}
+
+void AKBDevDamageActor::ApplyDamage()
+{
+    UGameplayStatics::ApplyRadialDamage(
+        GetWorld(), Damage, GetActorLocation(), SphereRadius, DamageType, {}, this, GetInstigatorController(), true);
 }
 
 // Called every frame

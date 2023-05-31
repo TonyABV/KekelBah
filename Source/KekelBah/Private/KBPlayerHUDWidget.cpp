@@ -95,6 +95,8 @@ bool UKBPlayerHUDWidget::Initialize()
 
     if (GetWorld()) GameMode = Cast<AKBGameModeBase>(GetWorld()->GetAuthGameMode());
 
+    if (!GameMode) return false;
+
     return Super::Initialize();
 }
 

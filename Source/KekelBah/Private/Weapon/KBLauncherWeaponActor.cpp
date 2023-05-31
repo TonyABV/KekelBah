@@ -4,6 +4,8 @@
 #include "Weapon/KBLauncherWeaponActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Weapon/KBProjectileBase.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 void AKBLauncherWeaponActor::StartFire()
 {
@@ -15,6 +17,7 @@ void AKBLauncherWeaponActor::MakeShot()
     if (IsAmmoEmpty())
     {
         EndFire();
+        UGameplayStatics::PlaySoundAtLocation(GetWorld(), NoAmmoSound, GetActorLocation());
         return;
     }
 
@@ -44,4 +47,5 @@ void AKBLauncherWeaponActor::MakeShot()
 
     DecreaseAmmo();
     SpawnMuzzleFX();
+    UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh, MuzzleSocketName);
 }

@@ -16,6 +16,8 @@ class KEKELBAH_API AKBGameModeBase : public AGameModeBase
 
 public:
 
+    FOnMatchStateChangedSignature OnMatchStateChanged;
+
 	AKBGameModeBase();
 
 	virtual void StartPlay() override;
@@ -34,6 +36,10 @@ public:
 
     void RespawnRequest(AController* Controller);
 
+	virtual bool SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate) override;
+
+	virtual bool ClearPause() override;
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Game")
@@ -44,6 +50,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Game")
     TSubclassOf<APawn> AIPawnClass;
+
+	EKBMatchState MatchState = EKBMatchState::WaitingToStart;
 
 private:
 
@@ -64,4 +72,6 @@ private:
     void SetPlayerColor(AController* Controller);
 
 	void LogPlayerInfo();
+
+    void SetMatchState(EKBMatchState NewMatchState);
 };

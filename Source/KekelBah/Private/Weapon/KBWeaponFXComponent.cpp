@@ -5,6 +5,7 @@
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/DecalComponent.h"
+#include "Sound/SoundCue.h"
 
 UKBWeaponFXComponent::UKBWeaponFXComponent()
 {
@@ -29,14 +30,12 @@ void UKBWeaponFXComponent::PlayImpactFX(const FHitResult& HitResult)
     }
 
     //Niagara
-
     UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),  //
         Effect.NiagaraEffect,                                   //
         HitResult.ImpactPoint,                                  //
         HitResult.Normal.Rotation());
 
     //Decal
-
     auto DecalComponent = UGameplayStatics::SpawnDecalAtLocation(GetWorld(),  //
         Effect.DecalData.DecalMaterial,                                       //
         Effect.DecalData.Size,                                                //
@@ -47,4 +46,7 @@ void UKBWeaponFXComponent::PlayImpactFX(const FHitResult& HitResult)
     {
         DecalComponent->SetFadeOut(Effect.DecalData.LifeTime, Effect.DecalData.FadeOutTime);
     }
+
+    //Sound
+    UGameplayStatics::SpawnSoundAtLocation(GetWorld(), Effect.HitSound, HitResult.ImpactPoint);
 }

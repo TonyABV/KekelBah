@@ -7,6 +7,9 @@
 #include "KBWeaponFXComponent.h"
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
+#include "Components/AudioComponent.h"
 
 
 AKBRifleWeaponActor::AKBRifleWeaponActor()
@@ -97,6 +100,11 @@ void AKBRifleWeaponActor::InitMuzzleFX()
     {
         MuzzleFXComponent = SpawnMuzzleFX();
     }
+
+    if (!FireAudioComponent)
+    {
+        FireAudioComponent = UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh, MuzzleSocketName);
+    }
     SetMuzzleFXVisibility(true);
 }
 
@@ -106,6 +114,11 @@ void AKBRifleWeaponActor::SetMuzzleFXVisibility(bool IsVisible)
 
     MuzzleFXComponent->SetPaused(!IsVisible);
     MuzzleFXComponent->SetVisibility(IsVisible);
+
+    if (FireAudioComponent)
+    {
+        FireAudioComponent->SetPaused(!IsVisible);
+    }
 }
 
 void AKBRifleWeaponActor::SpawnTraceFX(FVector StartPoint, FVector EndPoint)

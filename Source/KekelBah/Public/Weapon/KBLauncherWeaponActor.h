@@ -7,6 +7,7 @@
 #include "KBLauncherWeaponActor.generated.h"
 
 class AKBProjectileBase;
+class USoundCue;
 
 UCLASS()
 class KEKELBAH_API AKBLauncherWeaponActor : public AKBBaseWeaponActor
@@ -21,6 +22,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
     TSubclassOf<AKBProjectileBase> ProjectileClass;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+    USoundCue* NoAmmoSound = nullptr;
 
 protected:
 

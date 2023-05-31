@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "KBCoreTypes.h"
 #include "KBHUD.generated.h"
 
 /**
@@ -25,9 +26,18 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
     TSubclassOf<UUserWidget> PlayerHUDWidgetClass;
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+    TSubclassOf<UUserWidget> PauseHUDWidgetClass;
+    UPROPERTY(EditDefaultsOnly, Category = "UI")
+    TSubclassOf<UUserWidget>GameOverWidget;
 
 protected:
 
+	TMap<EKBMatchState, UUserWidget*> Widgets;
+
+	UUserWidget* CurrentWidget = nullptr;
+
 	void DrawCross();
 
+    void OnMatchStateChanged(EKBMatchState NewState);
 };

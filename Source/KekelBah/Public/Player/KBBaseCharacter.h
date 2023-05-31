@@ -14,6 +14,7 @@ class UTextRenderComponent;
 class AKBBaseWeaponActor;
 class UKBWeaponComponent;
 class USphereComponent;
+class USoundCue;
 
 UCLASS()
 class KEKELBAH_API AKBBaseCharacter : public ACharacter
@@ -73,6 +74,9 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Material")
     FName MaterialColorName = "Paint Color";
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound");
+    USoundCue* DeathSound = nullptr;
 
 protected:
 

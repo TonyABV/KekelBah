@@ -9,6 +9,7 @@
 class UKBWeaponFXComponent;
 class UNiagaraComponent;
 class UNiagaraSystem;
+class UAudioComponent;
 
 UCLASS()
 class KEKELBAH_API AKBRifleWeaponActor : public AKBBaseWeaponActor
@@ -44,6 +45,7 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
     FString TraceTargetName = "TraceTarget";
 
+    
 protected:
 
     virtual void BeginPlay() override;
@@ -57,4 +59,7 @@ protected:
     void SetMuzzleFXVisibility(bool IsVisible);
 
     void SpawnTraceFX(FVector StartPoint, FVector EndPoint);
+
+    UPROPERTY()
+    UAudioComponent* FireAudioComponent;
 };

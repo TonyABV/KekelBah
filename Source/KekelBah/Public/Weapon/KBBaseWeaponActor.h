@@ -11,8 +11,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmpty, AKBBaseWeaponActor*);
 class USkeletalMeshComponent;
 class UNiagaraSystem;
 class UNiagaraComponent;
-
-
+class USoundCue;
 
 USTRUCT(BlueprintType)
 struct FWeaponAmmo
@@ -98,6 +97,9 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
     UNiagaraSystem* MuzzleFX;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+    USoundCue* FireSound = nullptr;
 
 private:
 

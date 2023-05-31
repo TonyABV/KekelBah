@@ -75,6 +75,27 @@ void AKBGameModeBase::RespawnRequest(AController* Controller)
     ResetOnePlayer(Controller);
 }
 
+bool AKBGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate)
+{
+    const bool CanPause = Super::SetPause(PC, CanUnpauseDelegate);
+    if (CanPause)
+    {
+        SetMatchState(EKBMatchState::Pause);
+    }
+    return CanPause;
+}
+
+bool AKBGameModeBase::ClearPause()
+{
+    const bool ClearPauseStatus = Super::ClearPause();
+
+    if (ClearPauseStatus)
+    {
+        SetMatchState(EKBMatchState::InProgress);
+    }
+    return ClearPauseStatus;
+}
+
 void AKBGameModeBase::SpawnBots()
 {
     if (!AIControllerClass) return;
@@ -97,6 +118,7 @@ void AKBGameModeBase::StartRound()
         &AKBGameModeBase::EndRound,                         //
         GameData.RoundTime,                                 //
         true);
+    SetMatchState(EKBMatchState::InProgress);
 }
 
 void AKBGameModeBase::EndRound()
@@ -129,6 +151,7 @@ void AKBGameModeBase::GameOver()
         }
     }
     LogPlayerInfo();
+    SetMatchState(EKBMatchState::GameOver);
     UE_LOG(LogKBGameMode, Display, TEXT("----EndGame----"));
 }
 
@@ -157,12 +180,12 @@ void AKBGameModeBase::CreateTeamsInfo()
     if (!GetWorld()) return;
 
     int32 TeamID = 1;
+    int32 BotCounter = 1;
 
     for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
     {
         AController* Controller = It->Get();
         if (!Controller) continue;
-        ;
 
         AKBPlayerState* PlayerState = Controller->GetPlayerState<AKBPlayerState>();
         if (!PlayerState) continue;
@@ -170,6 +193,7 @@ void AKBGameModeBase::CreateTeamsInfo()
         PlayerState->SetTeamColor(DetermineColorByTeamID(TeamID));
         PlayerState->SetTeamID(TeamID);
         SetPlayerColor(Controller);
+        PlayerState->SetPlayerName(Controller->IsPlayerController() ? "Player" : ("Bot # " + FString::FromInt(BotCounter++)));
 
         TeamID = TeamID == 1 ? 2 : 1;
     }
@@ -209,5 +233,14 @@ void AKBGameModeBase::LogPlayerInfo()
         if (!PlayerState) continue;
 
         PlayerState->LogInfo();
+    }
+}
+
+void AKBGameModeBase::SetMatchState(EKBMatchState NewMatchState)
+{
+    if (NewMatchState != MatchState)
+    {
+        MatchState = NewMatchState;
+        OnMatchStateChanged.Broadcast(NewMatchState);
     }
 }

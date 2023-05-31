@@ -7,6 +7,7 @@
 #include "KBBasePickup.generated.h"
 
 class USphereComponent;
+class USoundCue;
 
 UCLASS()
 class KEKELBAH_API AKBBasePickup : public AActor
@@ -23,6 +24,9 @@ protected:
 
     UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
     USphereComponent* CollisionComponent;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Sound")
+    USoundCue* PickupSound;
 
 	UPROPERTY(EditAnywhere)
     float RespawnTime = 5.f;
